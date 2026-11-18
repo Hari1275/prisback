@@ -33,9 +33,9 @@ function packageJson(names, {workspace} = {}) {
     engines: {node: '22 || 24 || 26'},
     dependencies: {
       '@prisback/authentication': dep('^0.1.0'),
-      '@prisback/boot': dep('^9.0.1'),
+      '@prisback/boot': dep('^9.0.2'),
       '@prisback/core': dep('^8.0.1'),
-      '@prisback/prisma': dep('^0.1.0'),
+      '@prisback/prisma': dep('^0.1.1'),
       '@prisback/rest': dep('^16.0.1'),
       '@prisma/client': '^6.5.0',
       tslib: '^2.9.1',
