@@ -684,6 +684,12 @@ importers:
         specifier: ^20.19.43
         version: 20.19.43
 
+  packages/prisback:
+    dependencies:
+      '@prisback/cli':
+        specifier: workspace:*
+        version: link:../cli
+
   packages/prisma:
     dependencies:
       '@prisback/core':

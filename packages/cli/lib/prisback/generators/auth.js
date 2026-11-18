@@ -208,7 +208,7 @@ async function generateAuth(args = {}, opts = {}) {
     const pkg = fs.readJsonSync(pkgPath);
     pkg.dependencies = pkg.dependencies || {};
     if (!pkg.dependencies['@prisback/authentication']) {
-      pkg.dependencies['@prisback/authentication'] = 'workspace:*';
+      pkg.dependencies['@prisback/authentication'] = '^0.1.0';
       fs.writeJsonSync(pkgPath, pkg, {spaces: 2});
       packageUpdated = true;
     }

@@ -1,0 +1,4 @@
+# Keep dist publishable even though root .gitignore ignores dist/
+__tests__/
+*.tsbuildinfo
+coverage/

@@ -11,7 +11,8 @@
     "build": "pnpm -r --filter './packages/*' run build",
     "build:libs": "pnpm --filter @prisback/build... run build",
     "clean": "pnpm -r --filter './packages/*' run clean --if-present",
-    "test": "pnpm -r --filter './packages/*' run test --if-present"
+    "test": "pnpm -r --filter './packages/*' run test --if-present",
+    "publish:packages": "pnpm -r --filter './packages/*' publish --access public --no-git-checks"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",

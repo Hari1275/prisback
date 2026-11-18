@@ -2,35 +2,24 @@
 
 **Prisma + LoopBack-style architecture** — a MIT-licensed Node.js/TypeScript backend framework with IoC & OpenAPI, Nest-style `@Module` / DTO validation, and a Prisma-first CLI.
 
-> **Status:** source available on GitHub. Packages are not on npm yet — clone and use the monorepo (see below).
+## Quick start (strangers / end users)
 
-## Requirements
-
-- Node.js **22**, **24**, or **26**
-- [pnpm](https://pnpm.io/) **9+** (`corepack enable` then `corepack prepare pnpm@latest --activate`)
-
-## Try it (from source)
+Requires **Node.js 22+**.
 
 ```bash
-git clone https://github.com/Hari1275/prisback.git
-cd prisback
-pnpm install
-pnpm build
-
-# CLI from the monorepo
-node packages/cli/bin/cli-main.js --help
-
-# Starter example
-cd examples/starter
+npx prisback new my-api
+cd my-api
 cp .env.example .env
-pnpm install
+npm install
 npx prisma generate
-pnpm run build && pnpm start
+npm run build && npm start
 # → http://127.0.0.1:3000/ping
 # → http://127.0.0.1:3000/openapi.json
 ```
 
-Copy `.env.example` → `.env` and set a real `JWT_SECRET` before any shared/deployed use.
+Or install the CLI globally: `npm install -g prisback` then `prisback new my-api`.
+
+Set a real `JWT_SECRET` in `.env` before any shared/deployed use.
 
 ## Why PrisBack
 
@@ -47,28 +36,34 @@ Copy `.env.example` → `.env` and set a real `JWT_SECRET` before any shared/dep
 ## CLI
 
 ```bash
-# after build, from repo root:
-node packages/cli/bin/cli-main.js new my-api
-node packages/cli/bin/cli-main.js g model User
-node packages/cli/bin/cli-main.js g crud User
-node packages/cli/bin/cli-main.js g repository User
-node packages/cli/bin/cli-main.js g controller User --type empty
-node packages/cli/bin/cli-main.js g relation
-node packages/cli/bin/cli-main.js g auth
-node packages/cli/bin/cli-main.js serve
+prisback new my-api
+prisback serve
+
+prisback g model User
+prisback g crud User
+prisback g repository User
+prisback g controller User --type empty|crud
+prisback g relation
+prisback g auth
 ```
 
 Interactive prompts by default; flags / `--yes` for CI.
 
-## Monorepo packages
+## Develop this repo (contributors)
 
-**Product:** `context`, `core`, `rest`, `boot`, `cli`, `prisma`, `authentication`  
-**Support:** `metadata`, `express`, `http-server`, `openapi-v3`, …  
-**Example:** [`examples/starter`](examples/starter)
+```bash
+git clone https://github.com/Hari1275/prisback.git
+cd prisback
+pnpm install
+pnpm build
+node packages/cli/bin/cli-main.js --help
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Example app: [`examples/starter`](examples/starter).
 
 ## Security
 
-See [SECURITY.md](SECURITY.md). Do not commit `.env` or real secrets. Fixture `*.pem` files under `**/fixtures/` are **self-signed test certs** for HTTPS unit tests only.
+See [SECURITY.md](SECURITY.md). Never commit `.env` or real secrets. Fixture `*.pem` under `**/fixtures/` are self-signed **test** certs only.
 
 ## License
 

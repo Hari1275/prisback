@@ -8,7 +8,7 @@
   "author": "PrisBack Contributors",
   "repository": {
     "type": "git",
-    "url": "https://github.com/prisback/prisback.git",
+    "url": "https://github.com/Hari1275/prisback.git",
     "directory": "packages/authentication"
   },
   "engines": {

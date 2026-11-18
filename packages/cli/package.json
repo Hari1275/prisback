@@ -15,10 +15,10 @@
   "main": "generators/app/index.js",
   "author": "PrisBack Contributors (based on IBM Corp. and LoopBack contributors)",
   "copyright.owner": "PrisBack Contributors; IBM Corp. and LoopBack contributors",
-  "homepage": "https://github.com/prisback/prisback",
+  "homepage": "https://github.com/Hari1275/prisback",
   "repository": {
     "type": "git",
-    "url": "https://github.com/prisback/prisback.git",
+    "url": "https://github.com/Hari1275/prisback.git",
     "directory": "packages/cli"
   },
   "engines": {

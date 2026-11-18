@@ -1,0 +1,35 @@
+{
+  "name": "prisback",
+  "version": "0.1.0",
+  "description": "PrisBack CLI — Prisma-first backend scaffolding (npx prisback)",
+  "license": "MIT",
+  "bin": {
+    "prisback": "bin/prisback.js"
+  },
+  "files": [
+    "bin",
+    "README.md"
+  ],
+  "engines": {
+    "node": "22 || 24 || 26"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hari1275/prisback.git",
+    "directory": "packages/prisback"
+  },
+  "homepage": "https://github.com/Hari1275/prisback",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@prisback/cli": "workspace:*"
+  },
+  "keywords": [
+    "prisback",
+    "prisma",
+    "openapi",
+    "cli",
+    "scaffolding"
+  ]
+}
