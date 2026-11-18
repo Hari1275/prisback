@@ -1,0 +1,176 @@
+{
+  "name": "<%= project.name -%>",
+  "version": "0.0.1",
+  "description": "<%= project.description -%>",
+  "keywords": [
+    "loopback-<%= project.projectType -%>",
+    "loopback"
+  ],
+<% if (project.private) { -%>
+  "private": true,
+<% } -%>
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": "20 || 22 || 24"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rimraf dist *.tsbuildinfo .eslintcache",
+<% if (project.prettier && project.eslint) { -%>
+<% if (packageManager === 'yarn') { -%>
+    "lint": "yarn run prettier:check && yarn run eslint",
+    "lint:fix": "yarn run eslint:fix && yarn run prettier:fix",
+<% } else { -%>
+    "lint": "npm run prettier:check && npm run eslint",
+    "lint:fix": "npm run eslint:fix && npm run prettier:fix",
+<% } -%>
+<% } else if (project.prettier) { -%>
+<% if (packageManager === 'yarn') { -%>
+    "lint": "yarn run prettier:check",
+    "lint:fix": "yarn run prettier:fix",
+<% } else { -%>
+    "lint": "npm run prettier:check",
+    "lint:fix": "npm run prettier:fix",
+<% } -%>
+<% } else if (project.eslint) { -%>
+<% if (packageManager === 'yarn') { -%>
+    "lint": "yarn run eslint",
+    "lint:fix": "yarn run eslint:fix",
+<% } else { -%>
+    "lint": "npm run eslint",
+    "lint:fix": "npm run eslint:fix",
+<% } -%>
+<% } -%>
+<% if (project.prettier) { -%>
+    "prettier:cli": "prettier \"**/*.ts\" \"**/*.js\"",
+<% if (packageManager === 'yarn') { -%>
+    "prettier:check": "yarn run prettier:cli -l",
+    "prettier:fix": "yarn run prettier:cli --write",
+<% } else { -%>
+    "prettier:check": "npm run prettier:cli -- -l",
+    "prettier:fix": "npm run prettier:cli -- --write",
+<% } -%>
+<% } -%>
+<% if (project.eslint) { -%>
+    "eslint": "eslint .",
+<% if (packageManager === 'yarn') { -%>
+    "eslint:fix": "yarn run eslint --fix",
+<% } else { -%>
+    "eslint:fix": "npm run eslint -- --fix",
+<% } -%>
+<% } -%>
+<% if (packageManager === 'yarn') { -%>
+    "pretest": "yarn run rebuild",
+<% } else { -%>
+    "pretest": "npm run rebuild",
+<% } -%>
+<% if (project.mocha) { -%>
+    "test": "mocha dist/__tests__",
+<% } -%>
+<% if (project.prettier || project.eslint) { -%>
+<% if (packageManager === 'yarn') { -%>
+    "posttest": "yarn run lint",
+<% } else { -%>
+    "posttest": "npm run lint",
+<% } -%>
+<% } -%>
+<% if (project.mocha && (project.prettier || project.eslint)) { -%>
+<% if (packageManager === 'yarn') { -%>
+    "test:dev": "mocha dist/__tests__/**/*.js && yarn run posttest",
+<% } else { -%>
+    "test:dev": "mocha dist/__tests__/**/*.js && npm run posttest",
+<% } -%>
+<% } else if (project.mocha) { -%>
+    "test:dev": "mocha dist/__tests__/**/*.js",
+<% } -%>
+<% if (project.projectType === 'application') { -%>
+<% if (project.docker) { -%>
+    "docker:build": "docker build -t <%= project.name -%> .",
+    "docker:run": "docker run -p 3000:3000 -d <%= project.name -%>",
+<% } -%>
+<% if (project.repositories) { -%>
+    "migrate": "node ./dist/migrate",
+<% } -%>
+    "openapi-spec": "node ./dist/openapi-spec",
+<% if (packageManager === 'yarn') { -%>
+    "prestart": "yarn run rebuild",
+<% } else { -%>
+    "prestart": "npm run rebuild",
+<% } -%>
+    "start": "node -r source-map-support/register .",
+<% } -%>
+<% if (packageManager === 'yarn') { -%>
+    "prepare": "yarn run build",
+<% } else { -%>
+    "prepare": "npm run build",
+<% } -%>
+<% if (packageManager === 'yarn') { -%>
+  "rebuild": "yarn run clean && yarn run build"
+<% } else { -%>
+  "rebuild": "npm run clean && npm run build"
+<% } -%>
+  },
+  "repository": {
+    "type": "git"
+  },
+<% if (author) { -%>
+  "author": "<%= author.name %> <<%= author.email %>>",
+<% } else { -%>
+  "author": "",
+<% } -%>
+  "license": "",
+  "files": [
+    "README.md",
+    "dist",
+    "src",
+    "!*/__tests__"
+  ],
+<% if (project.projectType === 'extension') { -%>
+  "peerDependencies": {
+    "@prisback/core": "<%= project.dependencies['@prisback/core'] -%>"
+  },
+<% } -%>
+  "dependencies": {
+<% if (project.projectType === 'application') { -%>
+    "@prisback/boot": "<%= project.dependencies['@prisback/boot'] -%>",
+    "@prisback/core": "<%= project.dependencies['@prisback/core'] -%>",
+<% if (project.repositories) { -%>
+    "@prisback/repository": "<%= project.dependencies['@prisback/repository'] -%>",
+<% } -%>
+<% if (project.apiconnect) { -%>
+    "@prisback/apiconnect": "<%= project.dependencies['@prisback/apiconnect'] -%>",
+<% } -%>
+    "@prisback/rest": "<%= project.dependencies['@prisback/rest'] -%>",
+    "@prisback/rest-explorer": "<%= project.dependencies['@prisback/rest-explorer'] -%>",
+<% } -%>
+<% if (project.services) { -%>
+    "@prisback/service-proxy": "<%= project.dependencies['@prisback/service-proxy'] -%>",
+<% } -%>
+    "tslib": "<%= project.dependencies['tslib'] -%>"
+  },
+  "devDependencies": {
+    "rimraf": "<%= project.dependencies['rimraf'] -%>",
+    "source-map-support": "<%= project.dependencies['source-map-support'] -%>",
+<% if (project.projectType === 'extension') { -%>
+    "@prisback/core": "<%= project.dependencies['@prisback/core'] -%>",
+<% } -%>
+    "@prisback/testlab": "<%= project.dependencies['@prisback/testlab'] -%>",
+<% if (project.mocha) { -%>
+    "@types/mocha": "<%= project.dependencies['@types/mocha'] -%>",
+<% } -%>
+    "@types/node": "<%= project.dependencies['@types/node'] -%>",
+<% if (project.mocha) { -%>
+    "mocha": "<%= project.dependencies['mocha'] -%>",
+<% } -%>
+<% if (project.prettier) { -%>
+    "prettier": "<%= project.dependencies['prettier'] -%>",
+<% } -%>
+<% if (project.eslint) { -%>
+    "@prisback/eslint-config": "<%= project.dependencies['@prisback/eslint-config'] -%>",
+    "eslint": "<%= project.dependencies['eslint'] -%>",
+<% } -%>
+    "typescript": "<%= project.dependencies['typescript'] -%>"
+  }
+}

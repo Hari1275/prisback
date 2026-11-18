@@ -1,0 +1,30 @@
+{
+  "name": "@prisback/eslint-config",
+  "description": "ESLint configuration for LoopBack projects",
+  "version": "17.0.0",
+  "license": "MIT",
+  "main": "eslintrc.js",
+  "author": "PrisBack Contributors (based on IBM Corp. and LoopBack contributors)",
+  "copyright.owner": "PrisBack Contributors; IBM Corp. and LoopBack contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prisback/prisback.git",
+    "directory": "packages/eslint-config"
+  },
+  "engines": {
+    "node": "22 || 24 || 26"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "eslint": "^8.57.1"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.70.0",
+    "@typescript-eslint/parser": "^8.70.0",
+    "eslint-config-prettier": "^9.1.1",
+    "eslint-plugin-eslint-plugin": "^5.5.1",
+    "eslint-plugin-mocha": "^10.5.0"
+  }
+}

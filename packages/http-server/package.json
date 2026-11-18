@@ -1,0 +1,48 @@
+{
+  "name": "@prisback/http-server",
+  "description": "A wrapper for creating HTTP/HTTPS servers",
+  "version": "8.0.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "PrisBack Contributors (based on IBM Corp. and LoopBack contributors)",
+  "copyright.owner": "PrisBack Contributors; IBM Corp. and LoopBack contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prisback/prisback.git",
+    "directory": "packages/http-server"
+  },
+  "engines": {
+    "node": "22 || 24 || 26"
+  },
+  "scripts": {
+    "build": "pb-tsc",
+    "clean": "pb-clean loopback-http-server*.tgz dist *.tsbuildinfo package",
+    "pretest": "npm run build",
+    "test": "pb-mocha \"dist/__tests__/**/*.js\"",
+    "verify": "npm pack && tar xf loopback-http-server*.tgz && tree package && npm run clean"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "README.md",
+    "dist",
+    "src",
+    "!*/__tests__"
+  ],
+  "dependencies": {
+    "debug": "^4.4.3",
+    "stoppable": "^1.1.0",
+    "tslib": "^2.9.1"
+  },
+  "devDependencies": {
+    "@prisback/build": "workspace:*",
+    "@prisback/core": "workspace:*",
+    "@prisback/eslint-config": "workspace:*",
+    "@prisback/testlab": "workspace:*",
+    "@types/debug": "^4.1.13",
+    "@types/node": "^20.19.43",
+    "@types/stoppable": "^1.1.3"
+  }
+}

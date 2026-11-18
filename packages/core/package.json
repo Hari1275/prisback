@@ -1,0 +1,49 @@
+{
+  "name": "@prisback/core",
+  "description": "Define and implement core constructs such as Application and Component",
+  "version": "8.0.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "PrisBack Contributors (based on IBM Corp. and LoopBack contributors)",
+  "copyright.owner": "PrisBack Contributors; IBM Corp. and LoopBack contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prisback/prisback.git",
+    "directory": "packages/core"
+  },
+  "engines": {
+    "node": "22 || 24 || 26"
+  },
+  "scripts": {
+    "acceptance": "pb-mocha \"dist/__tests__/acceptance/**/*.js\"",
+    "build": "pb-tsc",
+    "clean": "pb-clean loopback-core*.tgz dist *.tsbuildinfo package",
+    "pretest": "npm run build",
+    "integration": "pb-mocha \"dist/__tests__/integration/**/*.js\"",
+    "test": "pb-mocha \"dist/__tests__/**/*.js\"",
+    "unit": "pb-mocha \"dist/__tests__/unit/**/*.js\"",
+    "verify": "npm pack && tar xf loopback-core*.tgz && tree package && npm run clean"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "README.md",
+    "dist",
+    "src",
+    "!*/__tests__"
+  ],
+  "dependencies": {
+    "@prisback/context": "workspace:*",
+    "debug": "^4.4.3",
+    "tslib": "^2.9.1"
+  },
+  "devDependencies": {
+    "@prisback/build": "workspace:*",
+    "@prisback/eslint-config": "workspace:*",
+    "@prisback/testlab": "workspace:*",
+    "@types/debug": "^4.1.13",
+    "@types/node": "^20.19.43"
+  }
+}

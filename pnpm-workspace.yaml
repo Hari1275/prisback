@@ -1,0 +1,13 @@
+packages:
+  - 'packages/*'
+
+strictDepBuilds: false
+
+allowBuilds:
+  '@livereach/jsonpath': false
+  '@scarf/scarf': false
+  '@tree-sitter-grammars/tree-sitter-yaml': false
+  core-js-pure: false
+  ejs: false
+  tree-sitter-json: false
+  tree-sitter: false

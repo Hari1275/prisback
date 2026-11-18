@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "packages/eslint-config" },
+    { "path": "packages/build" },
+    { "path": "packages/testlab" },
+    { "path": "packages/metadata" },
+    { "path": "packages/filter" },
+    { "path": "packages/context" },
+    { "path": "packages/core" },
+    { "path": "packages/http-server" },
+    { "path": "packages/express" },
+    { "path": "packages/openapi-spec-builder" },
+    { "path": "packages/repository" },
+    { "path": "packages/repository-json-schema" },
+    { "path": "packages/openapi-v3" },
+    { "path": "packages/rest" },
+    { "path": "packages/model-api-builder" },
+    { "path": "packages/service-proxy" },
+    { "path": "packages/boot" },
+    { "path": "packages/prisma" },
+    { "path": "packages/authentication" }
+  ]
+}

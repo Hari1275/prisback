@@ -1,0 +1,34 @@
+{
+  "name": "starter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Starter — PrisBack starter API",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:watch": "node dist/index.js",
+    "clean": "rimraf dist *.tsbuildinfo",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "pretest": "npm run build"
+  },
+  "engines": {
+    "node": "22 || 24 || 26"
+  },
+  "dependencies": {
+    "@prisback/authentication": "workspace:*",
+    "@prisback/boot": "workspace:*",
+    "@prisback/core": "workspace:*",
+    "@prisback/prisma": "workspace:*",
+    "@prisback/rest": "workspace:*",
+    "@prisma/client": "^6.5.0",
+    "tslib": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "prisma": "^6.5.0",
+    "rimraf": "^5.0.10",
+    "typescript": "~5.8.2"
+  }
+}

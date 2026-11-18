@@ -1,0 +1,13 @@
+{
+  "name": "@prisback/ts-test-proj",
+  "version": "1.0.0",
+  "description": "Test",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "typescript": "*"
+  },
+  "author": "PrisBack Contributors (based on IBM Corp. and LoopBack contributors)",
+  "license": "MIT"
+}

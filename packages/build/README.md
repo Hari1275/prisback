@@ -1,0 +1,220 @@
+# @prisback/build
+
+This module contains a set of common scripts and default configurations to build
+LoopBack 4 or other TypeScript modules, including:
+
+- pb-tsc: Use
+  [`tsc`](https://www.typescriptlang.org/docs/handbook/compiler-options.html) to
+  compile typescript files
+- pb-eslint: Run [`eslint`](https://typescript-eslint.io/)
+- pb-prettier: Run [`prettier`](https://github.com/prettier/prettier)
+- pb-mocha: Run [`mocha`](https://mochajs.org/) to execute test cases
+- pb-nyc: Run [`nyc`](https://github.com/istanbuljs/nyc)
+
+These scripts first try to locate the CLI from target project dependencies and
+fall back to bundled ones in `@prisback/build`.
+
+## Basic use
+
+To use `@prisback/build` for your package:
+
+1.  Run the following command to add `@prisback/build` as a dev dependency.
+
+`npm i @prisback/build --save-dev`
+
+2.  Configure your project package.json as follows:
+
+```json
+"scripts": {
+    "build": "pb-tsc",
+    "build:watch": "pb-tsc --watch",
+    "clean": "pb-clean",
+    "lint": "npm run prettier:check && npm run eslint",
+    "lint:fix": "npm run prettier:fix && npm run eslint:fix",
+    "prettier:cli": "pb-prettier \"**/*.ts\" \"**/*.js\"",
+    "prettier:check": "npm run prettier:cli -- -l",
+    "prettier:fix": "npm run prettier:cli -- --write",
+    "eslint": "pb-eslint --report-unused-disable-directives .",
+    "eslint:fix": "npm run eslint -- --fix",
+    "pretest": "npm run clean && npm run build",
+    "test": "pb-mocha \"dist/__tests__\"",
+    "posttest": "npm run lint",
+    "start": "npm run build && node .",
+    "prepublishOnly": "npm run test"
+  },
+```
+
+Please remember to replace `your-module-name` with the name of your module.
+
+Now you run the scripts, such as:
+
+- `npm run build` - Compile TypeScript files and copy resources (non `.ts`
+  files) to outDir
+- `npm test` - Run all mocha tests
+- `npm run lint` - Run `eslint` and `prettier` on source files
+
+3.  Override default configurations in your project
+
+- pb-tsc
+
+  By default, `pb-tsc` searches your project's root directory for
+  `tsconfig.build.json` then `tsconfig.json`. If neither of them exists, a
+  `tsconfig.json` will be created to extend from
+  `@prisback/build/config/tsconfig.common.json`.
+
+  To customize the configuration:
+  - Create `tsconfig.build.json` or `tsconfig.json` in your project's root
+    directory
+
+    ```json
+    {
+      "$schema": "http://json.schemastore.org/tsconfig",
+      "extends": "@prisback/build/config/tsconfig.common.json",
+      "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": "src"
+      },
+      "include": ["src"]
+    }
+    ```
+
+  - Set options explicitly for the script
+
+    ```sh
+    pb-tsc -p tsconfig.json --target es2017 --outDir dist
+    ```
+
+    For more information, see
+    <https://www.typescriptlang.org/docs/handbook/compiler-options.html>.
+
+  - The following un-official compiler options are available:
+
+    | Option             | Description                                                                                       |
+    | ------------------ | ------------------------------------------------------------------------------------------------- |
+    | `--copy-resources` | Copy all non-typescript files from `src` and `test` to `outDir`, preserving their relative paths. |
+
+  - TypeScript compiler
+
+    `pb-tsc` compiles with the TypeScript 7 native compiler (installed as
+    `@typescript/native`), preferring the copy owned by the project being built
+    over the one `@prisback/build` depends on.
+
+    TypeScript 7 no longer ships the JavaScript compiler API, so `typescript` is
+    aliased to `@typescript/typescript6`. That keeps `require('typescript')`
+    working for tools that consume the API, such as `@typescript-eslint` and
+    editor language services.
+
+    Note that TypeScript 7 removed `"moduleResolution": "node"` (node10).
+    `tsconfig.common.json` sets `"moduleResolution": "bundler"`, which honors
+    `exports` maps with the `require` and `types` conditions when combined with
+    `"module": "commonjs"`. Remove `"moduleResolution": "node"` from your
+    `tsconfig.json` to inherit it.
+
+    TypeScript 6 also stopped including every installed `@types/*` package
+    automatically, so `tsconfig.common.json` lists `"types": ["node", "mocha"]`.
+    A project that relies on other packages of global type declarations has to
+    list them explicitly:
+
+    ```json
+    {
+      "extends": "@prisback/build/config/tsconfig.common.json",
+      "compilerOptions": {
+        "types": ["node", "mocha", "my-global-types"]
+      }
+    }
+    ```
+
+  - Using [`ttypescript`](https://github.com/cevek/ttypescript)
+
+    ### Stability: ⚠️Experimental⚠️
+
+    If you would like to use `ttypescript` and its available plugins, you can
+    substitute `pb-tsc` with `pb-ttsc`, or pass the option
+    `pb-tsc --use-ttypescript`. `ttypescript` patches the JavaScript compiler
+    API, so it compiles with the JavaScript compiler from the `typescript`
+    package rather than the TypeScript 7 native compiler.
+
+4.  Run builds
+
+```sh
+npm run build
+```
+
+5.  Run code coverage reports
+
+- `pb-nyc`
+
+  `pb-nyc` is a simple wrapper for [`nyc`](https://github.com/istanbuljs/nyc).
+
+  To customize the configuration:
+  - Create `.nycrc` in your project's root directory
+
+    ```json
+    {
+      "include": ["dist"],
+      "exclude": ["dist/__tests__/"],
+      "extension": [".js", ".ts"],
+      "reporter": ["text", "html"],
+      "exclude-after-remap": false
+    }
+    ```
+
+  - Update your `package.json` scripts:
+
+    ```json
+    "precoverage": "npm test",
+    "coverage": "open coverage/index.html",
+    "coverage:ci": "pb-nyc report --reporter=text-lcov | coveralls",
+    "test": "pb-nyc npm run mocha",
+    "test:ci": "pb-nyc npm run mocha"
+    ```
+
+    `coverage:ci` sets up integration with [Coveralls](https://coveralls.io/).
+
+## A note on console logs printed by tests
+
+We consider (console) logging from tests as a bad practice, because such logs
+usually clutter the test output and make it difficult to distinguish legitimate
+error messages from the noise.
+
+By default, `pb-mocha` detects when the tests and/or the application tested have
+printed console logs and fails the test run with the following message:
+
+```
+=== ATTENTION - INVALID USAGE OF CONSOLE LOGS DETECTED ===
+```
+
+If you need more information about behavior in the test, then the first choice
+should be to use a better or more descriptive error assertion. If that's not
+possible, then use debug statements to print additional information when
+explicitly requested.
+
+A typical situation is that a test is sending an HTTP request and the server
+responds with an error code as expected. However, because the server is
+configured to log failed requests, it will print a log also for requests where
+the failure was expected and intentional. The solution is to configure your REST
+server to suppress error messages for that specific error code only. Our
+`@prisback/testlab` module is providing a helper
+[`createUnexpectedHttpErrorLogger`](https://github.com/loopbackio/loopback-next/tree/master/packages/testlab#createUnexpectedHttpErrorLogger)
+that makes this task super easy.
+
+Alternatively, it's also possible to disable detection of console logs by
+calling `pb-mocha` with `--allow-console-logs` argument.
+
+## Contributions
+
+- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
+- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+
+## Tests
+
+run `npm test` from the root folder.
+
+## Contributors
+
+See
+[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
+
+## License
+
+MIT

@@ -1,0 +1,22 @@
+{
+  "name": "prisback-monorepo",
+  "private": true,
+  "description": "PrisBack — LoopBack 4 core + Prisma-first CLI (MIT, based on loopback-next)",
+  "license": "MIT",
+  "engines": {
+    "node": "22 || 24 || 26",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter './packages/*' run build",
+    "build:libs": "pnpm --filter @prisback/build... run build",
+    "clean": "pnpm -r --filter './packages/*' run clean --if-present",
+    "test": "pnpm -r --filter './packages/*' run test --if-present"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.19.43",
+    "typescript": "npm:@typescript/typescript6@~6.0.2"
+  },
+  "packageManager": "pnpm@11.1.3"
+}

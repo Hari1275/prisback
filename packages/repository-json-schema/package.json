@@ -1,0 +1,59 @@
+{
+  "name": "@prisback/repository-json-schema",
+  "description": "Converts TS classes into JSON Schemas using TypeScript's reflection API",
+  "version": "10.0.1",
+  "keywords": [
+    "LoopBack",
+    "TypeScript",
+    "JSON Schema"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "PrisBack Contributors (based on IBM Corp. and LoopBack contributors)",
+  "copyright.owner": "PrisBack Contributors; IBM Corp. and LoopBack contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prisback/prisback.git",
+    "directory": "packages/repository-json-schema"
+  },
+  "engines": {
+    "node": "22 || 24 || 26"
+  },
+  "scripts": {
+    "build": "pb-tsc",
+    "clean": "pb-clean loopback-json-schema*.tgz dist *.tsbuildinfo package",
+    "pretest": "npm run build",
+    "test": "pb-mocha \"dist/__tests__/**/*.js\"",
+    "verify": "npm pack && tar xf loopback-json-schema*.tgz && tree package && npm run clean"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "README.md",
+    "dist",
+    "src",
+    "!*/__tests__"
+  ],
+  "peerDependencies": {
+    "@prisback/core": "workspace:*",
+    "@prisback/repository": "workspace:*"
+  },
+  "dependencies": {
+    "@types/json-schema": "^7.0.15",
+    "debug": "^4.4.3",
+    "tslib": "^2.9.1"
+  },
+  "devDependencies": {
+    "@prisback/build": "workspace:*",
+    "@prisback/core": "workspace:*",
+    "@prisback/eslint-config": "workspace:*",
+    "@prisback/repository": "workspace:*",
+    "@prisback/testlab": "workspace:*",
+    "@types/debug": "^4.1.13",
+    "@types/node": "^20.19.43",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "mymonorepo",
+  "copyright.owner": "PrisBack Contributors; IBM Corp. and LoopBack contributors",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ]
+}

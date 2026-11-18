@@ -1,0 +1,51 @@
+{
+  "name": "@prisback/openapi-spec-builder",
+  "description": "Make it easy to create OpenAPI (Swagger) specification documents in your tests using the builder pattern.",
+  "version": "9.0.1",
+  "keywords": [
+    "Swagger",
+    "OpenAPI Spec",
+    "TypeScript",
+    "Builder",
+    "Testing"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "PrisBack Contributors (based on IBM Corp. and LoopBack contributors)",
+  "copyright.owner": "PrisBack Contributors; IBM Corp. and LoopBack contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prisback/prisback.git",
+    "directory": "packages/openapi-spec-builder"
+  },
+  "engines": {
+    "node": "22 || 24 || 26"
+  },
+  "scripts": {
+    "build": "pb-tsc",
+    "clean": "pb-clean loopback-openapi-spec-builder*.tgz dist *.tsbuildinfo package",
+    "pretest": "npm run build",
+    "test": "pb-mocha \"dist/__tests__/**/*.js\"",
+    "verify": "npm pack && tar xf loopback-openapi-spec-builder*.tgz && tree package && npm run clean"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "README.md",
+    "dist",
+    "src",
+    "!*/__tests__"
+  ],
+  "dependencies": {
+    "openapi3-ts": "^2.0.2",
+    "tslib": "^2.9.1"
+  },
+  "devDependencies": {
+    "@prisback/build": "workspace:*",
+    "@prisback/eslint-config": "workspace:*",
+    "@prisback/testlab": "workspace:*",
+    "@types/node": "^20.19.43"
+  }
+}

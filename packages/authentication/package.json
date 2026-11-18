@@ -1,0 +1,56 @@
+{
+  "name": "@prisback/authentication",
+  "description": "Basic JWT authentication for PrisBack — @authenticate(), TokenService, password hashing",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "PrisBack Contributors",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prisback/prisback.git",
+    "directory": "packages/authentication"
+  },
+  "engines": {
+    "node": "22 || 24 || 26"
+  },
+  "scripts": {
+    "build": "pb-tsc",
+    "clean": "pb-clean dist *.tsbuildinfo package",
+    "pretest": "npm run build",
+    "test": "pb-mocha \"dist/__tests__/**/*.js\"",
+    "unit": "pb-mocha \"dist/__tests__/unit/**/*.js\""
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "README.md",
+    "dist",
+    "src",
+    "!*/__tests__"
+  ],
+  "dependencies": {
+    "@prisback/core": "workspace:*",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "tslib": "^2.9.1"
+  },
+  "peerDependencies": {
+    "@prisback/rest": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@prisback/rest": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@prisback/build": "workspace:*",
+    "@prisback/eslint-config": "workspace:*",
+    "@prisback/rest": "workspace:*",
+    "@prisback/testlab": "workspace:*",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^20.19.43"
+  }
+}
