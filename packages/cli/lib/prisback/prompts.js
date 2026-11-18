@@ -126,7 +126,14 @@ async function promptModelFields(opts = {}) {
           type: 'text',
           name: 'name',
           message: 'Property name',
-          validate: v => (/^[a-z][A-Za-z0-9]*$/.test(v) ? true : 'camelCase name'),
+          validate: v => {
+            if (!/^[a-z][A-Za-z0-9]*$/.test(v)) return 'camelCase name';
+            if (v === 'id') {
+              return 'Reserved: primary key "id" is added automatically (Int @id @default(autoincrement()))';
+            }
+            if (fields.some(f => f.name === v)) return `Property "${v}" already exists`;
+            return true;
+          },
         },
         {
           type: 'select',
@@ -159,45 +166,15 @@ async function promptModelFields(opts = {}) {
           message: 'Add index (@@index)?',
           initial: false,
         },
-        {
-          // Int/BigInt → SQL-style autoincrement; String → uuid/cuid/auto (Mongo ObjectId)
-          type: (prev, values) =>
-            values.type === 'Int' || values.type === 'String' ? 'select' : null,
-          name: 'defaultFn',
-          message: 'Auto-generate default?',
-          choices: (prev, values) => {
-            if (values.type === 'Int') {
-              return [
-                {title: 'None', value: ''},
-                {
-                  title: 'Autoincrement (@default(autoincrement())) — Postgres/SQLite/MySQL',
-                  value: 'autoincrement',
-                },
-              ];
-            }
-            return [
-              {title: 'None', value: ''},
-              {title: 'UUID (@default(uuid()))', value: 'uuid'},
-              {title: 'CUID (@default(cuid()))', value: 'cuid'},
-              {
-                title: 'Mongo ObjectId (@default(auto()))',
-                value: 'auto',
-              },
-            ];
-          },
-          initial: 0,
-        },
       ],
       opts,
     );
-    const defaultFn = prop.defaultFn || '';
     fields.push({
       name: prop.name,
       type: prop.type,
       isOptional: prop.isOptional,
       isId: false,
-      hasDefault: Boolean(defaultFn),
-      defaultFn: defaultFn || undefined,
+      hasDefault: false,
       isUpdatedAt: false,
       isUnique: Boolean(prop.isUnique),
       isIndex: Boolean(prop.isIndex),

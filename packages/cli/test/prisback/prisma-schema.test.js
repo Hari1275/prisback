@@ -63,42 +63,20 @@ describe('prisma-schema parser', () => {
     ).to.eql(['@IsDateString()']);
   });
 
-  it('appendModel writes unique, index, and autoincrement', () => {
+  it('appendModel writes default id autoincrement plus unique and index', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'prisback-schema-'));
     const schemaPath = path.join(dir, 'prisma', 'schema.prisma');
     appendModel(schemaPath, 'Product', [
       {name: 'id', type: 'Int', isId: true, hasDefault: true, isOptional: false},
       {name: 'sku', type: 'String', isUnique: true, isOptional: false},
-      {name: 'code', type: 'Int', hasDefault: true, isOptional: false},
       {name: 'category', type: 'String', isIndex: true, isOptional: true},
     ]);
     const content = fs.readFileSync(schemaPath, 'utf8');
     expect(content).to.match(/id\s+Int\s+@id\s+@default\(autoincrement\(\)\)/);
     expect(content).to.match(/sku\s+String\s+@unique/);
-    expect(content).to.match(/code\s+Int\s+@default\(autoincrement\(\)\)/);
     expect(content).to.match(/@@index\(\[category\]\)/);
-    fs.removeSync(dir);
-  });
-
-  it('appendModel writes String uuid/cuid/auto defaults', () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'prisback-schema-'));
-    const schemaPath = path.join(dir, 'prisma', 'schema.prisma');
-    appendModel(schemaPath, 'Doc', [
-      {
-        name: 'id',
-        type: 'String',
-        isId: true,
-        defaultFn: 'uuid',
-        hasDefault: true,
-        isOptional: false,
-      },
-      {name: 'slug', type: 'String', defaultFn: 'cuid', hasDefault: true, isOptional: false},
-      {name: 'mongoId', type: 'String', defaultFn: 'auto', hasDefault: true, isOptional: false},
-    ]);
-    const content = fs.readFileSync(schemaPath, 'utf8');
-    expect(content).to.match(/id\s+String\s+@id\s+@default\(uuid\(\)\)/);
-    expect(content).to.match(/slug\s+String\s+@default\(cuid\(\)\)/);
-    expect(content).to.match(/mongoId\s+String\s+@default\(auto\(\)\)/);
+    // only one field declaration named id (not counting @id attribute)
+    expect(content.match(/^\s+id\s+/gm).length).to.eql(1);
     fs.removeSync(dir);
   });
 });

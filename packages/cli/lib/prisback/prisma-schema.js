@@ -92,25 +92,6 @@ function getModel(models, modelName) {
 }
 
 /**
- * Prisma @default(...) for a field.
- * - Int + autoincrement / hasDefault → autoincrement() (Postgres/SQLite/MySQL)
- * - String + uuid|cuid|auto → uuid()/cuid()/auto() (auto = Mongo ObjectId)
- * - DateTime + hasDefault → now()
- */
-function defaultAttributeForField(f) {
-  if (f.defaultFn === 'autoincrement' || (f.hasDefault && f.type === 'Int' && !f.defaultFn)) {
-    return '@default(autoincrement())';
-  }
-  if (f.defaultFn === 'uuid') return '@default(uuid())';
-  if (f.defaultFn === 'cuid') return '@default(cuid())';
-  if (f.defaultFn === 'auto') return '@default(auto())';
-  if (f.defaultFn === 'now' || (f.hasDefault && f.type === 'DateTime' && !f.defaultFn)) {
-    return '@default(now())';
-  }
-  return null;
-}
-
-/**
  * Append a model block to schema.prisma (creates file with generator/datasource if missing).
  */
 function appendModel(schemaPath, modelName, fields) {
@@ -138,8 +119,9 @@ datasource db {
     const opt = f.isOptional ? '?' : '';
     const attrs = [];
     if (f.isId) attrs.push('@id');
-    const defaultAttr = defaultAttributeForField(f);
-    if (defaultAttr) attrs.push(defaultAttr);
+    // Primary key / Int defaults only — property prompts do not set autoincrement
+    if (f.hasDefault && f.type === 'Int') attrs.push('@default(autoincrement())');
+    if (f.hasDefault && f.type === 'DateTime') attrs.push('@default(now())');
     if (f.isUpdatedAt) attrs.push('@updatedAt');
     if (f.isUnique) attrs.push('@unique');
     const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
