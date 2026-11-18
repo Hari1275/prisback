@@ -147,6 +147,24 @@ async function promptModelFields(opts = {}) {
           message: 'Is optional?',
           initial: false,
         },
+        {
+          type: 'confirm',
+          name: 'isUnique',
+          message: 'Unique (@unique)?',
+          initial: false,
+        },
+        {
+          type: 'confirm',
+          name: 'isIndex',
+          message: 'Add index (@@index)?',
+          initial: false,
+        },
+        {
+          type: (prev, values) => (values.type === 'Int' ? 'confirm' : null),
+          name: 'hasDefault',
+          message: 'Autoincrement (@default(autoincrement()))?',
+          initial: false,
+        },
       ],
       opts,
     );
@@ -155,9 +173,10 @@ async function promptModelFields(opts = {}) {
       type: prop.type,
       isOptional: prop.isOptional,
       isId: false,
-      hasDefault: false,
+      hasDefault: prop.type === 'Int' ? Boolean(prop.hasDefault) : false,
       isUpdatedAt: false,
-      isUnique: false,
+      isUnique: Boolean(prop.isUnique),
+      isIndex: Boolean(prop.isIndex),
     });
   }
 

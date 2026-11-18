@@ -119,7 +119,8 @@ datasource db {
     const opt = f.isOptional ? '?' : '';
     const attrs = [];
     if (f.isId) attrs.push('@id');
-    if (f.hasDefault && f.type === 'Int' && f.isId) attrs.push('@default(autoincrement())');
+    // Int + hasDefault → @default(autoincrement()) for id or any Int field
+    if (f.hasDefault && f.type === 'Int') attrs.push('@default(autoincrement())');
     if (f.hasDefault && f.type === 'DateTime') attrs.push('@default(now())');
     if (f.isUpdatedAt) attrs.push('@updatedAt');
     if (f.isUnique) attrs.push('@unique');
@@ -127,7 +128,16 @@ datasource db {
     return `  ${f.name} ${f.type}${opt}${attrStr}`;
   });
 
-  content = content.replace(/\s*$/, '\n') + `\nmodel ${modelName} {\n${lines.join('\n')}\n}\n`;
+  for (const f of fields) {
+    if (f.isIndex && !f.isUnique) {
+      // @@index only when not already uniquely constrained
+      lines.push(`  @@index([${f.name}])`);
+    }
+  }
+
+  content =
+    content.replace(/\s*$/, '\n') +
+    `\nmodel ${modelName} {\n${lines.join('\n')}\n}\n`;
   fs.writeFileSync(schemaPath, content);
   return schemaPath;
 }
