@@ -79,4 +79,26 @@ describe('prisma-schema parser', () => {
     expect(content).to.match(/@@index\(\[category\]\)/);
     fs.removeSync(dir);
   });
+
+  it('appendModel writes String uuid/cuid/auto defaults', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'prisback-schema-'));
+    const schemaPath = path.join(dir, 'prisma', 'schema.prisma');
+    appendModel(schemaPath, 'Doc', [
+      {
+        name: 'id',
+        type: 'String',
+        isId: true,
+        defaultFn: 'uuid',
+        hasDefault: true,
+        isOptional: false,
+      },
+      {name: 'slug', type: 'String', defaultFn: 'cuid', hasDefault: true, isOptional: false},
+      {name: 'mongoId', type: 'String', defaultFn: 'auto', hasDefault: true, isOptional: false},
+    ]);
+    const content = fs.readFileSync(schemaPath, 'utf8');
+    expect(content).to.match(/id\s+String\s+@id\s+@default\(uuid\(\)\)/);
+    expect(content).to.match(/slug\s+String\s+@default\(cuid\(\)\)/);
+    expect(content).to.match(/mongoId\s+String\s+@default\(auto\(\)\)/);
+    fs.removeSync(dir);
+  });
 });

@@ -160,20 +160,44 @@ async function promptModelFields(opts = {}) {
           initial: false,
         },
         {
-          type: (prev, values) => (values.type === 'Int' ? 'confirm' : null),
-          name: 'hasDefault',
-          message: 'Autoincrement (@default(autoincrement()))?',
-          initial: false,
+          // Int/BigInt → SQL-style autoincrement; String → uuid/cuid/auto (Mongo ObjectId)
+          type: (prev, values) =>
+            values.type === 'Int' || values.type === 'String' ? 'select' : null,
+          name: 'defaultFn',
+          message: 'Auto-generate default?',
+          choices: (prev, values) => {
+            if (values.type === 'Int') {
+              return [
+                {title: 'None', value: ''},
+                {
+                  title: 'Autoincrement (@default(autoincrement())) — Postgres/SQLite/MySQL',
+                  value: 'autoincrement',
+                },
+              ];
+            }
+            return [
+              {title: 'None', value: ''},
+              {title: 'UUID (@default(uuid()))', value: 'uuid'},
+              {title: 'CUID (@default(cuid()))', value: 'cuid'},
+              {
+                title: 'Mongo ObjectId (@default(auto()))',
+                value: 'auto',
+              },
+            ];
+          },
+          initial: 0,
         },
       ],
       opts,
     );
+    const defaultFn = prop.defaultFn || '';
     fields.push({
       name: prop.name,
       type: prop.type,
       isOptional: prop.isOptional,
       isId: false,
-      hasDefault: prop.type === 'Int' ? Boolean(prop.hasDefault) : false,
+      hasDefault: Boolean(defaultFn),
+      defaultFn: defaultFn || undefined,
       isUpdatedAt: false,
       isUnique: Boolean(prop.isUnique),
       isIndex: Boolean(prop.isIndex),
