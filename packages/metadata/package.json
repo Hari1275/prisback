@@ -1,9 +1,9 @@
 {
   "name": "@prisback/metadata",
   "description": "Utilities to help developers implement TypeScript decorators, define/merge metadata, and inspect metadata",
-  "version": "9.0.1",
+  "version": "9.0.2",
   "keywords": [
-    "LoopBack",
+    "PrisBack",
     "Decorators",
     "Reflect"
   ],

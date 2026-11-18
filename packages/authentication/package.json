@@ -1,7 +1,7 @@
 {
   "name": "@prisback/authentication",
   "description": "Basic JWT authentication for PrisBack — @authenticate(), TokenService, password hashing",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

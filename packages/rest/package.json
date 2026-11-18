@@ -1,7 +1,7 @@
 {
   "name": "@prisback/rest",
   "description": "Expose controllers as REST endpoints and route REST API requests to controller methods",
-  "version": "16.0.1",
+  "version": "16.0.2",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

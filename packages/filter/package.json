@@ -1,7 +1,7 @@
 {
   "name": "@prisback/filter",
-  "description": "Utility typings and filters for LoopBack filters.",
-  "version": "7.0.1",
+  "description": "Utility typings and filters for PrisBack filters.",
+  "version": "7.0.2",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,7 +1,7 @@
 {
   "name": "@prisback/service-proxy",
   "description": "A common set of interfaces for interacting with service oriented backends such as REST APIs, SOAP Web Services, and gRPC microservices",
-  "version": "9.0.1",
+  "version": "9.0.2",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

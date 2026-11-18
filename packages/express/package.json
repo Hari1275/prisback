@@ -1,7 +1,7 @@
 {
   "name": "@prisback/express",
   "description": "Integrate with Express and expose middleware infrastructure for sequence and interceptors",
-  "version": "9.0.1",
+  "version": "9.0.2",
   "keywords": [
     "loopback-extension",
     "loopback"

@@ -1,7 +1,6 @@
 # @prisback/rest
 
-The REST API package for
-[loopback-next](https://github.com/loopbackio/loopback-next).
+REST + OpenAPI server for [PrisBack](https://github.com/Hari1275/prisback).
 
 ## Overview
 
@@ -15,7 +14,7 @@ with:
 - a default sequence implementation to manage the request and response lifecycle
 
 **NOTE: Starting from 6.0.0, we have introduced a middleware-based sequence,
-which is used as the default one for newly generated LoopBack applications using
+which is used as the default one for newly generated PrisBack applications using
 `prisback` command from `@prisback/cli`.**
 
 ## Installation
@@ -49,22 +48,20 @@ app.handler(({request, response}, sequence) => {
 
 ## Configuration
 
-See https://loopback.io/doc/en/prisback/Server.html#configuration.
+See the package docs in this repository and the root README.
 
 ## Contributions
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
 
 ## Tests
 
 Run `npm test` from the root folder.
 
-## Contributors
-
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
-
 ## License
 
-MIT
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.
+

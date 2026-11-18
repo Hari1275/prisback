@@ -1,7 +1,7 @@
 {
   "name": "prisback-monorepo",
   "private": true,
-  "description": "PrisBack — LoopBack 4 core + Prisma-first CLI (MIT, based on loopback-next)",
+  "description": "PrisBack \u2014 Prisma-first TypeScript backend framework (MIT, based on LoopBack 4 core)",
   "license": "MIT",
   "engines": {
     "node": "22 || 24 || 26",

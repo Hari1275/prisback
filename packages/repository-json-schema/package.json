@@ -1,9 +1,9 @@
 {
   "name": "@prisback/repository-json-schema",
   "description": "Converts TS classes into JSON Schemas using TypeScript's reflection API",
-  "version": "10.0.1",
+  "version": "10.0.2",
   "keywords": [
-    "LoopBack",
+    "PrisBack",
     "TypeScript",
     "JSON Schema"
   ],

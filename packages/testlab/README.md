@@ -1,10 +1,10 @@
-# LoopBack Test Lab
+# @prisback/testlab
 
-A collection of test utilities we use to write LoopBack tests.
+A collection of test utilities we use to write PrisBack tests.
 
 ## Overview
 
-Test utilities to help writing LoopBack 4 tests:
+Test utilities to help writing PrisBack tests:
 
 - `expect` - behavior-driven development (BDD) style assertions
 - `sinon`
@@ -13,7 +13,7 @@ Test utilities to help writing LoopBack 4 tests:
   - stubs: functions (spies) with pre-programmed behavior
   - mocks: fake methods (like spies) with pre-programmed behavior (like stubs)
     as well as pre-programmed expectations
-- Helpers for creating `supertest` clients for LoopBack applications
+- Helpers for creating `supertest` clients for PrisBack applications
 - HTTP request/response stubs for writing tests without a listening HTTP server
 - Swagger/OpenAPI spec validation
 - Test sandbox
@@ -457,18 +457,16 @@ For more info about `supertest`, please refer to
 
 ## Contributions
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
 
 ## Tests
 
 Run `npm test` from the root folder.
 
-## Contributors
-
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
-
 ## License
 
-MIT
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.
+

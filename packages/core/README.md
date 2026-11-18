@@ -1,88 +1,44 @@
 # @prisback/core
 
-LoopBack makes it easy to build modern applications that require complex
-integrations.
+PrisBack makes it easy to build modern TypeScript backends with IoC, modules, and OpenAPI-friendly architecture.
 
 ## Overview
 
 - Fast, small, powerful, extensible core
-- Generate real APIs with a single command
-- Define your data and endpoints with OpenAPI
-- No maintenance of generated code
+- Nest-style `@Module` registration
+- Application lifecycle hooks
+- Works with `@prisback/rest`, `@prisback/prisma`, and the CLI
 
 ## Installation
 
 ```shell
-$ npm install --save @prisback/core
+npm install --save @prisback/core
 ```
 
 ## Basic Use
 
-`@prisback/core` provides the foundation for your LoopBack app, but unlike
-previous versions, it no longer contains the implementation for listening
-servers.
+`@prisback/core` provides the foundation for your PrisBack app. It does not include a listening HTTP server by itself.
 
-For a typical example of how to create a REST server with your application, see
-the
-[@prisback/rest package.](https://github.com/loopbackio/loopback-next/tree/master/packages/rest)
-
-## Advanced Use
-
-Since `@prisback/core` is decoupled from the listening server implementation,
-LoopBack applications are now able to work with any component that provides this
-functionality.
+For a typical REST server, see [`@prisback/rest`](https://github.com/Hari1275/prisback/tree/main/packages/rest) and the [`examples/starter`](https://github.com/Hari1275/prisback/tree/main/examples/starter) app.
 
 ```ts
-// index.ts
 import {Application} from '@prisback/core';
-import {RestComponent} from '@prisback/rest';
-import {GrpcComponent} from '@prisback/grpc';
 
-const app = new Application({
-  rest: {
-    port: 3000,
-  },
-  grpc: {
-    port: 3001,
-  },
-});
-app.component(RestComponent); // REST Server
-app.component(GrpcComponent)(
-  // GRPC Server
-
-  async function start() {
-    // Let's retrieve the bound instances of our servers.
-    const rest = await app.getServer<RestServer>('RestServer');
-    const grpc = await app.getServer<GrpcServer>('GrpcServer');
-
-    // Define all sorts of bindings here to pass configuration or data
-    // between your server instances, define controllers and datasources for them,
-    // etc...
-    await app.start(); // This automatically spins up all your servers, too!
-    console.log(`REST server running on port: ${rest.getSync('rest.port')}`);
-    console.log(`GRPC server running on port: ${grpc.getSync('grpc.port')}`);
-  },
-)();
+const app = new Application();
+await app.start();
 ```
-
-In the above example, having a GRPC server mounted on your Application could
-enable communication with other GRPC-enabled microservices, allowing things like
-dynamic configuration updates.
 
 ## Contributions
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
 
 ## Tests
 
-Run `npm test` from the root folder.
-
-## Contributors
-
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
+Run `pnpm test` from the monorepo root.
 
 ## License
 
-MIT
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.

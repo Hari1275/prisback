@@ -1,7 +1,7 @@
 {
   "name": "@prisback/testlab",
-  "description": "A collection of test utilities we use to write LoopBack tests.",
-  "version": "9.0.1",
+  "description": "A collection of test utilities for PrisBack packages.",
+  "version": "9.0.2",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

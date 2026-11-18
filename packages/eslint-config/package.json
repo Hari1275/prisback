@@ -1,7 +1,7 @@
 {
   "name": "@prisback/eslint-config",
-  "description": "ESLint configuration for LoopBack projects",
-  "version": "17.0.0",
+  "description": "ESLint configuration for PrisBack projects",
+  "version": "17.0.1",
   "license": "MIT",
   "main": "eslintrc.js",
   "author": "PrisBack Contributors (based on IBM Corp. and LoopBack contributors)",

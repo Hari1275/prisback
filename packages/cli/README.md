@@ -1,6 +1,6 @@
 # @prisback/cli
 
-This module contains the official CLI for LoopBack 4.
+Official CLI for PrisBack (`prisback`).
 
 ## Installation
 
@@ -24,7 +24,7 @@ Use the option `--help` to learn more about any specific command:
 $ prisback model --help
 ```
 
-Run `prisback` or `prisback app` to scaffold a new LoopBack 4 project.
+Run `prisback` or `prisback app` to scaffold a new PrisBack project (`prisback new`).
 
 ```
 $ prisback app
@@ -48,23 +48,20 @@ $ prisback -v
   - (etc.)
 ```
 
-See [CLI reference](https://loopback.io/doc/en/prisback/Command-line-interface.html)
-for a detailed documentation.
+See the root [README](https://github.com/Hari1275/prisback#cli) for commands.
 
 ## Contributions
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
 
 ## Tests
 
 run `npm test` from the root folder.
 
-## Contributors
-
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
-
 ## License
 
-MIT
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.
+

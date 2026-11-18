@@ -1,10 +1,10 @@
 # @prisback/http-server
 
-This package implements the HTTP / HTTPS server endpoint for LoopBack 4 apps.
+This package implements the HTTP / HTTPS server endpoint for PrisBack apps.
 
 ## Overview
 
-This is an internal package used by LoopBack 4 for creating HTTP / HTTPS server.
+This is an internal package used by PrisBack for creating HTTP / HTTPS server.
 
 ## Installation
 
@@ -47,18 +47,16 @@ Instance properties of `HttpServer`.
 
 ## Contributions
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/wiki/Contributing#guidelines)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
 
 ## Tests
 
 Run `npm test` from the root folder.
 
-## Contributors
-
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
-
 ## License
 
-MIT
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.
+

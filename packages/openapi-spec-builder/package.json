@@ -1,7 +1,7 @@
 {
   "name": "@prisback/openapi-spec-builder",
   "description": "Make it easy to create OpenAPI (Swagger) specification documents in your tests using the builder pattern.",
-  "version": "9.0.1",
+  "version": "9.0.2",
   "keywords": [
     "Swagger",
     "OpenAPI Spec",

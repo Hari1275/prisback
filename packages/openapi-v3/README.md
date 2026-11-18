@@ -2,12 +2,12 @@
 
 This package contains:
 
-- Decorators that describe LoopBack artifacts as OpenAPI 3.0.0 metadata.
-- Utilities that transfer LoopBack metadata to OpenAPI 3.0.0 specifications.
+- Decorators that describe PrisBack artifacts as OpenAPI 3.0.0 metadata.
+- Utilities that transfer PrisBack metadata to OpenAPI 3.0.0 specifications.
 
 ## Overview
 
-The package has functions described above for LoopBack controller classes.
+The package has functions described above for PrisBack controller classes.
 Decorators apply REST api mapping metadata to controller classes and their
 members. And utilities that inspect controller classes to build OpenAPI 3.0.0
 specifications from REST API mapping metadata.
@@ -57,7 +57,7 @@ then the `myControllerSpec` will be:
 ```
 
 For details of how to apply controller decorators, please check
-<http://loopback.io/doc/en/prisback/Decorators.html#route-decorators>
+See this package and the monorepo README for decorator usage.
 
 ## Related resources
 
@@ -67,18 +67,16 @@ of OpenAPI Specification.
 
 ## Contributions
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
 
 ## Tests
 
 Run `npm test` from the root folder.
 
-## Contributors
-
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
-
 ## License
 
-MIT
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.
+

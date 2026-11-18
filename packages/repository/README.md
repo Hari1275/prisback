@@ -21,7 +21,7 @@ how to define repositories and use them with controllers.
 
 ### Defining a legacy datasource and a model
 
-The repository module provides APIs to define LoopBack 3.x data sources and
+The repository module provides APIs to define legacy-compatible data sources and
 models. For example,
 
 ```ts
@@ -56,7 +56,7 @@ export type NoteWithRelations = Note & NoteRelations;
 ```
 
 **NOTE**: There is no declarative support for data source and model yet in
-LoopBack 4. These constructs need to be created programmatically as illustrated
+PrisBack. These constructs need to be created programmatically as illustrated
 above.
 
 ### Defining a repository
@@ -157,18 +157,16 @@ export class RepoApplication extends BootMixin(
 
 ## Contributions
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
 
 ## Tests
 
 Run `npm test` from the root folder.
 
-## Contributors
-
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
-
 ## License
 
-MIT
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.
+

@@ -7,7 +7,7 @@ filters using the
 ## Overview
 
 This lightweight module provides strongly-typed typings and filter builders to
-intuitively construct LoopBack filters to be used against querying a LoopBack
+intuitively construct PrisBack filters to be used against querying a LoopBack
 filter-compatible server over the network or within the server itself.
 
 ## Installation
@@ -111,25 +111,23 @@ const filter = filterBuilder
 ## API docs
 
 See the API docs for
-[FilterBuilder](https://loopback.io/doc/en/prisback/apidocs.filter.filterbuilder.html)
+[FilterBuilder](https://github.com/Hari1275/prisback)
 and
-[WhereBuilder](https://loopback.io/doc/en/prisback/apidocs.filter.wherebuilder.html)
+[WhereBuilder](https://github.com/Hari1275/prisback)
 for more details on the full API.
 
 ## Contributions
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
 
 ## Tests
 
 Run `npm test` from the root folder.
 
-## Contributors
-
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
-
 ## License
 
-MIT
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.
+

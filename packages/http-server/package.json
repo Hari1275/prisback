@@ -1,7 +1,7 @@
 {
   "name": "@prisback/http-server",
   "description": "A wrapper for creating HTTP/HTTPS servers",
-  "version": "8.0.1",
+  "version": "8.0.2",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

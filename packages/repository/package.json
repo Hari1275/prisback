@@ -1,7 +1,7 @@
 {
   "name": "@prisback/repository",
   "description": "Define and implement a common set of interfaces for interacting with databases",
-  "version": "9.0.1",
+  "version": "9.0.2",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -85,12 +85,12 @@ hello();
 ```
 
 For additional information, please refer to the
-[Context page](http://loopback.io/doc/en/prisback/Context.html).
+See this package README and the monorepo docs for Context usage.
 
 ## Examples
 
 To learn more about advanced features, check out standalone examples at
-[`@prisback/example-context`](https://github.com/loopbackio/loopback-next/tree/master/examples/context).
+[`@prisback/example-context`](https://github.com/Hari1275/prisback/tree/main/examples/context).
 
 Use the following command to download the example project to try out:
 
@@ -100,18 +100,16 @@ prisback example context
 
 ## Contributions
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
 
 ## Tests
 
 Run `npm test` from the root folder.
 
-## Contributors
-
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
-
 ## License
 
-MIT
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.
+

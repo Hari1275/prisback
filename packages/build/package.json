@@ -1,7 +1,7 @@
 {
   "name": "@prisback/build",
-  "description": "A set of common scripts and default configurations to build LoopBack 4 or other TypeScript modules",
-  "version": "13.0.1",
+  "description": "A set of common scripts and default configurations to build PrisBack or other TypeScript modules",
+  "version": "13.0.2",
   "license": "MIT",
   "bin": {
     "pb-tsc": "./bin/compile-package.js",

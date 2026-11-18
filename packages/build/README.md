@@ -1,7 +1,7 @@
 # @prisback/build
 
 This module contains a set of common scripts and default configurations to build
-LoopBack 4 or other TypeScript modules, including:
+PrisBack or other TypeScript modules, including:
 
 - pb-tsc: Use
   [`tsc`](https://www.typescriptlang.org/docs/handbook/compiler-options.html) to
@@ -195,7 +195,7 @@ configured to log failed requests, it will print a log also for requests where
 the failure was expected and intentional. The solution is to configure your REST
 server to suppress error messages for that specific error code only. Our
 `@prisback/testlab` module is providing a helper
-[`createUnexpectedHttpErrorLogger`](https://github.com/loopbackio/loopback-next/tree/master/packages/testlab#createUnexpectedHttpErrorLogger)
+[`createUnexpectedHttpErrorLogger`](https://github.com/Hari1275/prisback/tree/main/packages/testlab#createUnexpectedHttpErrorLogger)
 that makes this task super easy.
 
 Alternatively, it's also possible to disable detection of console logs by
@@ -203,18 +203,16 @@ calling `pb-mocha` with `--allow-console-logs` argument.
 
 ## Contributions
 
-- [Guidelines](https://github.com/loopbackio/loopback-next/blob/master/docs/CONTRIBUTING.md)
-- [Join the team](https://github.com/loopbackio/loopback-next/issues/110)
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
 
 ## Tests
 
 run `npm test` from the root folder.
 
-## Contributors
-
-See
-[all contributors](https://github.com/loopbackio/loopback-next/graphs/contributors).
-
 ## License
 
-MIT
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.
+

@@ -1,6 +1,6 @@
 # `@prisback/prisma`
 
-Prisma ORM integration for PrisBack: singleton `PrismaService` with LoopBack lifecycle hooks and `@injectPrisma()`.
+Prisma ORM integration for PrisBack: singleton `PrismaService` with application lifecycle hooks and `@injectPrisma()`.
 
 ## Usage
 
@@ -23,3 +23,15 @@ class UserRepository {
 ```
 
 On `app.init()` / start, Prisma `$connect()` runs. On `app.stop()`, `$disconnect()` runs.
+
+## Contributions
+
+- [Guidelines](https://github.com/Hari1275/prisback/blob/main/CONTRIBUTING.md)
+- [Open an issue](https://github.com/Hari1275/prisback/issues)
+
+## License
+
+MIT — see the root [`LICENSE`](https://github.com/Hari1275/prisback/blob/main/LICENSE).
+
+PrisBack is an independent MIT-licensed fork based on LoopBack 4 core. It is **not** affiliated with or endorsed by IBM or the LoopBack project.
+

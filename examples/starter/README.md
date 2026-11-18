@@ -1,6 +1,6 @@
 # Starter
 
-PrisBack starter API (LoopBack IoC + OpenAPI + Prisma).
+PrisBack starter API (PrisBack IoC + OpenAPI + Prisma).
 
 ## Quick start
 
