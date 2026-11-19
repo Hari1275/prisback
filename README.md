@@ -2,6 +2,8 @@
 
 **Prisma + LoopBack-style architecture** — a MIT-licensed Node.js/TypeScript backend framework with IoC & OpenAPI, Nest-style `@Module` / DTO validation, and a Prisma-first CLI.
 
+**Full user guide (commands, auth, security, performance):** [docs/GUIDE.md](docs/GUIDE.md)
+
 ## Quick start (strangers / end users)
 
 Requires **Node.js 22+**.
@@ -24,7 +26,7 @@ npm run build && npm start
 
 Or install the CLI globally: `npm install -g prisback` then `prisback new my-api`.
 
-Production: strong `JWT_SECRET` (32+ chars), `NODE_ENV=production`, see [docs/deploy.md](docs/deploy.md). Enterprise notes: [docs/performance.md](docs/performance.md), [docs/UPGRADE.md](docs/UPGRADE.md).
+Production: strong `JWT_SECRET` (32+ chars), `NODE_ENV=production`. See **[docs/GUIDE.md](docs/GUIDE.md)** (complete how-to), [docs/deploy.md](docs/deploy.md), [docs/performance.md](docs/performance.md), [docs/UPGRADE.md](docs/UPGRADE.md).
 
 ## Why PrisBack
 
