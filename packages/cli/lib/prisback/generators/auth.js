@@ -8,6 +8,8 @@ const {
   readSchema,
   appendModel,
   parseSchema,
+  parseDatasourceProvider,
+  defaultIdField,
 } = require('../prisma-schema');
 const {ask, promptSelectModel} = require('../prompts');
 const {writeFile, projectRoot} = require('../write');
@@ -109,19 +111,20 @@ function ensureUserModel(schemaPath, userModel) {
     return {created: false, updated: false};
   }
 
-  appendModel(schemaPath, userModel, [
-    {name: 'id', type: 'Int', isId: true, hasDefault: true, isOptional: false},
-    {name: 'email', type: 'String', isOptional: false, isUnique: true},
-    {name: 'password', type: 'String', isOptional: false},
-    {name: 'name', type: 'String', isOptional: true},
-  ]);
-  // Fix unique on email — appendModel uses isUnique
-  let written = fs.readFileSync(schemaPath, 'utf8');
-  written = written.replace(
-    new RegExp(`(model\\s+${userModel}\\s*\\{[\\s\\S]*?email\\s+String)(?!\\s+@unique)`),
-    '$1 @unique',
+  const provider = content
+    ? parseDatasourceProvider(content)
+    : 'sqlite';
+  appendModel(
+    schemaPath,
+    userModel,
+    [
+      defaultIdField(provider),
+      {name: 'email', type: 'String', isOptional: false, isUnique: true},
+      {name: 'password', type: 'String', isOptional: false},
+      {name: 'name', type: 'String', isOptional: true},
+    ],
+    {provider},
   );
-  fs.writeFileSync(schemaPath, written);
   return {created: true, updated: false};
 }
 

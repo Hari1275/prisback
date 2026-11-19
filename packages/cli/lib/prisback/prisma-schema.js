@@ -15,6 +15,96 @@ const SCALAR_TYPES = new Set([
   'Bytes',
 ]);
 
+/** Prisma datasource providers we scaffold / detect */
+const DATABASE_PROVIDERS = [
+  {value: 'sqlite', title: 'SQLite (file)'},
+  {value: 'postgresql', title: 'PostgreSQL'},
+  {value: 'mysql', title: 'MySQL'},
+  {value: 'mongodb', title: 'MongoDB'},
+];
+
+function isMongoProvider(provider) {
+  return String(provider || '').toLowerCase() === 'mongodb';
+}
+
+/**
+ * Read `provider = "..."` from datasource block.
+ */
+function parseDatasourceProvider(content) {
+  if (!content) return 'sqlite';
+  const m = content.match(
+    /datasource\s+\w+\s*\{[\s\S]*?provider\s*=\s*"([^"]+)"/,
+  );
+  return (m && m[1]) || 'sqlite';
+}
+
+function readDatasourceProvider(schemaPath) {
+  if (!fs.existsSync(schemaPath)) return 'sqlite';
+  return parseDatasourceProvider(fs.readFileSync(schemaPath, 'utf8'));
+}
+
+/**
+ * Default primary key for a provider (one id only).
+ * MongoDB requires String @id @default(auto()) @map("_id") @db.ObjectId
+ * SQL uses Int @id @default(autoincrement())
+ */
+function defaultIdField(provider = 'sqlite') {
+  if (isMongoProvider(provider)) {
+    return {
+      name: 'id',
+      type: 'String',
+      isId: true,
+      hasDefault: true,
+      defaultFn: 'auto',
+      map: '_id',
+      nativeType: 'ObjectId',
+      isOptional: false,
+      isUpdatedAt: false,
+      isUnique: false,
+    };
+  }
+  return {
+    name: 'id',
+    type: 'Int',
+    isId: true,
+    hasDefault: true,
+    isOptional: false,
+    isUpdatedAt: false,
+    isUnique: false,
+  };
+}
+
+function schemaPreamble(provider = 'sqlite') {
+  return `generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "${provider}"
+  url      = env("DATABASE_URL")
+}
+
+`;
+}
+
+function envExampleForProvider(provider = 'sqlite') {
+  const p = String(provider || 'sqlite').toLowerCase();
+  const urls = {
+    sqlite: 'file:./dev.db',
+    postgresql: 'postgresql://USER:PASSWORD@localhost:5432/mydb?schema=public',
+    mysql: 'mysql://USER:PASSWORD@localhost:3306/mydb',
+    mongodb:
+      'mongodb+srv://USER:PASSWORD@cluster.example.mongodb.net/mydb?retryWrites=true&w=majority',
+  };
+  const databaseUrl = urls[p] || urls.sqlite;
+  return `PORT=3000
+HOST=127.0.0.1
+DATABASE_URL="${databaseUrl}"
+JWT_SECRET=change-me-in-production
+JWT_EXPIRES_IN=1h
+`;
+}
+
 /**
  * Locate prisma/schema.prisma from cwd (walk up a few levels).
  */
@@ -92,45 +182,79 @@ function getModel(models, modelName) {
 }
 
 /**
- * Append a model block to schema.prisma (creates file with generator/datasource if missing).
+ * Render one Prisma field line (provider-aware defaults / Mongo @map).
  */
-function appendModel(schemaPath, modelName, fields) {
+function formatFieldLine(f, provider = 'sqlite') {
+  const mongo = isMongoProvider(provider);
+  const opt = f.isOptional ? '?' : '';
+  const attrs = [];
+  if (f.isId) attrs.push('@id');
+
+  if (f.defaultFn === 'auto' || (f.isId && f.hasDefault && mongo && f.type === 'String')) {
+    attrs.push('@default(auto())');
+  } else if (f.hasDefault && f.type === 'Int' && !mongo) {
+    attrs.push('@default(autoincrement())');
+  } else if (f.hasDefault && f.type === 'DateTime') {
+    attrs.push('@default(now())');
+  } else if (f.defaultFn === 'uuid') {
+    attrs.push('@default(uuid())');
+  } else if (f.defaultFn === 'cuid') {
+    attrs.push('@default(cuid())');
+  }
+
+  if (f.isUpdatedAt) attrs.push('@updatedAt');
+  if (f.isUnique) attrs.push('@unique');
+  if (f.map) attrs.push(`@map("${f.map}")`);
+  if (f.nativeType) attrs.push(`@db.${f.nativeType}`);
+
+  // Mongo PK must map to _id
+  if (f.isId && mongo && !f.map && f.name === 'id') {
+    if (!attrs.some(a => a.startsWith('@map('))) attrs.push('@map("_id")');
+    if (f.type === 'String' && !attrs.some(a => a.startsWith('@db.'))) {
+      attrs.push('@db.ObjectId');
+    }
+  }
+
+  const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
+  return `  ${f.name} ${f.type}${opt}${attrStr}`;
+}
+
+/**
+ * Append a model block to schema.prisma (creates file with generator/datasource if missing).
+ * Uses datasource provider so MongoDB gets ObjectId ids (not Int autoincrement).
+ */
+function appendModel(schemaPath, modelName, fields, opts = {}) {
   fs.ensureDirSync(path.dirname(schemaPath));
   let content = '';
+  let provider = opts.provider;
   if (fs.existsSync(schemaPath)) {
     content = fs.readFileSync(schemaPath, 'utf8');
     if (parseSchema(content).some(m => m.name === modelName)) {
       throw new Error(`Model "${modelName}" already exists in ${schemaPath}`);
     }
+    provider = provider || parseDatasourceProvider(content);
   } else {
-    content = `generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-`;
+    provider = provider || 'sqlite';
+    content = schemaPreamble(provider);
   }
 
-  const lines = fields.map(f => {
-    const opt = f.isOptional ? '?' : '';
-    const attrs = [];
-    if (f.isId) attrs.push('@id');
-    // Primary key / Int defaults only — property prompts do not set autoincrement
-    if (f.hasDefault && f.type === 'Int') attrs.push('@default(autoincrement())');
-    if (f.hasDefault && f.type === 'DateTime') attrs.push('@default(now())');
-    if (f.isUpdatedAt) attrs.push('@updatedAt');
-    if (f.isUnique) attrs.push('@unique');
-    const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
-    return `  ${f.name} ${f.type}${opt}${attrStr}`;
+  // Normalize a lone Int autoincrement id → Mongo ObjectId when provider is mongodb
+  const normalized = fields.map(f => {
+    if (
+      isMongoProvider(provider) &&
+      f.isId &&
+      f.name === 'id' &&
+      f.type === 'Int'
+    ) {
+      return defaultIdField('mongodb');
+    }
+    return f;
   });
 
-  for (const f of fields) {
+  const lines = normalized.map(f => formatFieldLine(f, provider));
+
+  for (const f of normalized) {
     if (f.isIndex && !f.isUnique) {
-      // @@index only when not already uniquely constrained
       lines.push(`  @@index([${f.name}])`);
     }
   }
@@ -200,6 +324,14 @@ function idField(fields) {
 
 module.exports = {
   SCALAR_TYPES,
+  DATABASE_PROVIDERS,
+  isMongoProvider,
+  parseDatasourceProvider,
+  readDatasourceProvider,
+  defaultIdField,
+  schemaPreamble,
+  envExampleForProvider,
+  formatFieldLine,
   findSchemaPath,
   parseSchema,
   readSchema,

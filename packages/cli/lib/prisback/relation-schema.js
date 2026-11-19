@@ -3,7 +3,19 @@
 const fs = require('fs-extra');
 const {camelCase, pascalCase, pluralize} = require('./naming');
 const {relationType} = require('./relation-types');
-const {idField, parseSchema} = require('./prisma-schema');
+const {
+  idField,
+  parseSchema,
+  parseDatasourceProvider,
+  isMongoProvider,
+} = require('./prisma-schema');
+
+/** FK line with @db.ObjectId when parent PK is Mongo ObjectId */
+function fkFieldLine(name, idType, provider, suffix = '') {
+  const mongoObj =
+    isMongoProvider(provider) && idType === 'String' ? ' @db.ObjectId' : '';
+  return `${name} ${idType}${mongoObj}${suffix}`;
+}
 
 function defaultRelationName(type, targetName) {
   const camel = camelCase(targetName);
@@ -48,14 +60,24 @@ function insertFieldsIntoModel(content, modelName, lines) {
   });
 }
 
-function ensureThroughModel(content, throughName, source, target, sourceFk, targetFk, sourceIdType, targetIdType) {
+function ensureThroughModel(
+  content,
+  throughName,
+  source,
+  target,
+  sourceFk,
+  targetFk,
+  sourceIdType,
+  targetIdType,
+  provider = 'sqlite',
+) {
   if (parseSchema(content).some(m => m.name === throughName)) {
     return content;
   }
   const block = `
 model ${throughName} {
-  ${sourceFk} ${sourceIdType}
-  ${targetFk} ${targetIdType}
+  ${fkFieldLine(sourceFk, sourceIdType, provider)}
+  ${fkFieldLine(targetFk, targetIdType, provider)}
   ${camelCase(source)} ${source} @relation(fields: [${sourceFk}], references: [id])
   ${camelCase(target)} ${target} @relation(fields: [${targetFk}], references: [id])
 
@@ -84,6 +106,7 @@ function applyRelationToSchemaContent(content, spec, models) {
     throughTargetKey,
   } = spec;
 
+  const provider = parseDatasourceProvider(content);
   const source = models.find(m => m.name === sourceModel);
   const target = models.find(m => m.name === targetModel);
   if (!source || !target) {
@@ -107,7 +130,7 @@ function applyRelationToSchemaContent(content, spec, models) {
     case relationType.belongsTo: {
       // source belongsTo target → FK on source, array back-relation on target
       next = insertFieldsIntoModel(next, sourceModel, [
-        `${fk} ${targetIdType}`,
+        fkFieldLine(fk, targetIdType, provider),
         `${relName} ${targetModel} @relation(fields: [${fk}], references: [id])`,
       ]);
       const back = pluralize(camelCase(sourceModel));
@@ -120,7 +143,7 @@ function applyRelationToSchemaContent(content, spec, models) {
         `${relName} ${targetModel}[]`,
       ]);
       next = insertFieldsIntoModel(next, targetModel, [
-        `${fk} ${sourceIdType}`,
+        fkFieldLine(fk, sourceIdType, provider),
         `${camelCase(sourceModel)} ${sourceModel} @relation(fields: [${fk}], references: [id])`,
       ]);
       break;
@@ -130,7 +153,7 @@ function applyRelationToSchemaContent(content, spec, models) {
         `${relName} ${targetModel}?`,
       ]);
       next = insertFieldsIntoModel(next, targetModel, [
-        `${fk} ${sourceIdType} @unique`,
+        fkFieldLine(fk, sourceIdType, provider, ' @unique'),
         `${camelCase(sourceModel)} ${sourceModel} @relation(fields: [${fk}], references: [id])`,
       ]);
       break;
@@ -151,6 +174,7 @@ function applyRelationToSchemaContent(content, spec, models) {
         targetFk,
         sourceIdType,
         targetIdType,
+        provider,
       );
       break;
     }

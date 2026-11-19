@@ -27,6 +27,7 @@ Generators:
 
 Examples:
   prisback new my-api
+  prisback new my-api --provider mongodb
   cd my-api && npm install && npx prisma generate && npm run build && npm start
   # → http://127.0.0.1:3000/ping
   # → http://127.0.0.1:3000/openapi.json
@@ -36,6 +37,7 @@ Examples:
   prisback g auth
 
 Options:
+  --provider <name>  sqlite | postgresql | mysql | mongodb (for new)
   --empty / --type / --source / --target / --userModel / --register
   --port <n>       For serve
   --force          Overwrite
@@ -66,22 +68,25 @@ async function runPrisbackCommand(opts, log = console.log) {
   // Top-level: new / serve
   if (cmd === 'new') {
     const result = await generateNewApp(
-      {name: args[0], _: args},
+      {name: args[0], _: args, provider: opts.provider},
       {
         cwd: opts.cwd || process.cwd(),
         outdir: opts.outdir || opts.outDir,
         force: Boolean(opts.force),
         nonInteractive: Boolean(opts.yes || opts.nonInteractive),
+        provider: opts.provider,
       },
     );
     log(chalk.green(`✔ Created PrisBack app ${result.name}`));
     log(`  ${result.outDir}`);
+    log(`  database: ${result.provider}`);
     for (const f of result.files) log(`  ${f.relative}`);
     log('');
     log('Next:');
     log(`  cd ${pathBasename(result.outDir)}`);
-    log('  cp .env.example .env');
+    log('  cp .env.example .env   # set DATABASE_URL for your provider');
     log('  npm install && npx prisma generate');
+    log('  npx prisma db push');
     log('  npm run build && npm start');
     log('  # OpenAPI: http://127.0.0.1:3000/openapi.json');
     return result;

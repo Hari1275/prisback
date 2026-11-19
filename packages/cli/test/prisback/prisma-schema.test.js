@@ -10,6 +10,9 @@ const {
   createDtoFields,
   validatorDecoratorsForField,
   appendModel,
+  defaultIdField,
+  parseDatasourceProvider,
+  schemaPreamble,
 } = require('../../lib/prisback/prisma-schema');
 
 const SAMPLE = `
@@ -77,6 +80,57 @@ describe('prisma-schema parser', () => {
     expect(content).to.match(/@@index\(\[category\]\)/);
     // only one field declaration named id (not counting @id attribute)
     expect(content.match(/^\s+id\s+/gm).length).to.eql(1);
+    fs.removeSync(dir);
+  });
+
+  it('SQL providers use Int autoincrement ids', () => {
+    for (const provider of ['sqlite', 'postgresql', 'mysql']) {
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'prisback-schema-'));
+      const schemaPath = path.join(dir, 'prisma', 'schema.prisma');
+      fs.ensureDirSync(path.dirname(schemaPath));
+      fs.writeFileSync(schemaPath, schemaPreamble(provider));
+      appendModel(schemaPath, 'Item', [defaultIdField(provider)], {provider});
+      const content = fs.readFileSync(schemaPath, 'utf8');
+      expect(content).to.match(new RegExp(`provider\\s*=\\s*"${provider}"`));
+      expect(content).to.match(
+        /id\s+Int\s+@id\s+@default\(autoincrement\(\)\)/,
+      );
+      expect(content).to.not.match(/@map\("_id"\)/);
+      fs.removeSync(dir);
+    }
+  });
+
+  it('appendModel uses Mongo ObjectId id when provider is mongodb', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'prisback-schema-'));
+    const schemaPath = path.join(dir, 'prisma', 'schema.prisma');
+    fs.ensureDirSync(path.dirname(schemaPath));
+    fs.writeFileSync(schemaPath, schemaPreamble('mongodb'));
+    expect(parseDatasourceProvider(fs.readFileSync(schemaPath, 'utf8'))).to.eql(
+      'mongodb',
+    );
+    appendModel(schemaPath, 'User', [
+      defaultIdField('mongodb'),
+      {name: 'email', type: 'String', isUnique: true, isOptional: false},
+    ]);
+    const content = fs.readFileSync(schemaPath, 'utf8');
+    expect(content).to.match(
+      /id\s+String\s+@id\s+@default\(auto\(\)\)\s+@map\("_id"\)\s+@db\.ObjectId/,
+    );
+    expect(content).to.not.match(/autoincrement/);
+    // Int id input is normalized for mongodb
+    appendModel(
+      schemaPath,
+      'Post',
+      [
+        {name: 'id', type: 'Int', isId: true, hasDefault: true, isOptional: false},
+        {name: 'name', type: 'String', isOptional: false},
+      ],
+      {provider: 'mongodb'},
+    );
+    const post = fs.readFileSync(schemaPath, 'utf8');
+    expect(post).to.match(
+      /model Post \{\n\s+id String @id @default\(auto\(\)\) @map\("_id"\) @db\.ObjectId/,
+    );
     fs.removeSync(dir);
   });
 });

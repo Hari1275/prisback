@@ -1,6 +1,11 @@
 'use strict';
 
 const prompts = require('prompts');
+const {
+  DATABASE_PROVIDERS,
+  defaultIdField,
+  isMongoProvider,
+} = require('./prisma-schema');
 
 async function ask(questions, opts = {}) {
   if (opts.nonInteractive) {
@@ -81,29 +86,46 @@ async function promptControllerType(opts = {}) {
   );
 }
 
+async function promptDatabaseProvider(opts = {}) {
+  if (opts.provider) return {provider: opts.provider};
+  if (opts.nonInteractive) return {provider: 'sqlite'};
+  const answer = await ask(
+    [
+      {
+        type: 'select',
+        name: 'provider',
+        message: 'Database provider',
+        choices: DATABASE_PROVIDERS.map(p => ({
+          title: p.title,
+          value: p.value,
+        })),
+        initial: 0,
+      },
+    ],
+    opts,
+  );
+  return {provider: answer.provider || 'sqlite'};
+}
+
 async function promptModelFields(opts = {}) {
+  const provider = opts.provider || 'sqlite';
+  const idField = defaultIdField(provider);
+  const idHint = isMongoProvider(provider)
+    ? 'String @id @default(auto()) @map("_id") @db.ObjectId'
+    : 'Int @id @default(autoincrement())';
+
   if (opts.fields && Array.isArray(opts.fields)) return {fields: opts.fields};
   if (opts.nonInteractive) {
     return {
       fields: [
-        {name: 'id', type: 'Int', isId: true, hasDefault: true, isOptional: false},
+        {...idField},
         {name: 'email', type: 'String', isOptional: false},
         {name: 'name', type: 'String', isOptional: true},
       ],
     };
   }
 
-  const fields = [
-    {
-      name: 'id',
-      type: 'Int',
-      isId: true,
-      hasDefault: true,
-      isOptional: false,
-      isUpdatedAt: false,
-      isUnique: false,
-    },
-  ];
+  const fields = [{...idField}];
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -129,7 +151,7 @@ async function promptModelFields(opts = {}) {
           validate: v => {
             if (!/^[a-z][A-Za-z0-9]*$/.test(v)) return 'camelCase name';
             if (v === 'id') {
-              return 'Reserved: primary key "id" is added automatically (Int @id @default(autoincrement()))';
+              return `Reserved: primary key "id" is added automatically (${idHint})`;
             }
             if (fields.some(f => f.name === v)) return `Property "${v}" already exists`;
             return true;
@@ -393,6 +415,7 @@ async function promptRelation(models, opts = {}) {
 
 module.exports = {
   ask,
+  promptDatabaseProvider,
   promptModelName,
   promptCrudMode,
   promptControllerType,

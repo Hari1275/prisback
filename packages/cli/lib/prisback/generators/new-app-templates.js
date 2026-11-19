@@ -71,27 +71,17 @@ function tsconfigJson() {
   };
 }
 
-function prismaSchema() {
-  return `generator client {
-  provider = "prisma-client-js"
+function prismaSchema(provider = 'sqlite') {
+  const {schemaPreamble} = require('../prisma-schema');
+  return (
+    schemaPreamble(provider) +
+    '// Run: prisback g model / prisback g crud / prisback g auth\n'
+  );
 }
 
-datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-// Run: prisback g model / prisback g crud / prisback g auth
-`;
-}
-
-function envExample() {
-  return `PORT=3000
-HOST=127.0.0.1
-DATABASE_URL="file:./dev.db"
-JWT_SECRET=change-me-in-production
-JWT_EXPIRES_IN=1h
-`;
+function envExample(provider = 'sqlite') {
+  const {envExampleForProvider} = require('../prisma-schema');
+  return envExampleForProvider(provider);
 }
 
 function gitignore() {

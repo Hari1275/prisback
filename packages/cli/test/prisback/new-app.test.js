@@ -39,6 +39,10 @@ describe('prisback new', function () {
     expect(await fs.pathExists(path.join(root, 'prisma/schema.prisma'))).to.be.true();
     expect(await fs.pathExists(path.join(root, 'public/index.html'))).to.be.true();
 
+    const schema = await fs.readFile(path.join(root, 'prisma/schema.prisma'), 'utf8');
+    expect(schema).to.match(/provider\s*=\s*"sqlite"/);
+    expect(result.provider).to.eql('sqlite');
+
     const indexSrc = await fs.readFile(path.join(root, 'src/index.ts'), 'utf8');
     expect(indexSrc).to.match(/openapi\.json/);
     expect(indexSrc).to.match(/\/ping/);
@@ -47,6 +51,20 @@ describe('prisback new', function () {
     expect(appSrc).to.match(/PrismaComponent/);
     expect(appSrc).to.match(/AuthenticationComponent/);
     expect(appSrc).to.match(/BootMixin/);
+  });
+
+  it('scaffolds mongodb datasource when provider is mongodb', async () => {
+    const result = await generateNewApp(
+      {name: 'mongo-api'},
+      {cwd: tmp, nonInteractive: true, outdir: 'mongo-api', provider: 'mongodb'},
+    );
+    const schema = await fs.readFile(
+      path.join(result.outDir, 'prisma/schema.prisma'),
+      'utf8',
+    );
+    expect(schema).to.match(/provider\s*=\s*"mongodb"/);
+    const env = await fs.readFile(path.join(result.outDir, '.env.example'), 'utf8');
+    expect(env).to.match(/mongodb/);
   });
 
   it('runPrisbackCommand new works', async () => {

@@ -66,6 +66,7 @@ ${renderDtoClass(`Update${names.pascal}Dto`, updateFields)}
 }
 
 function generateRepositoryFile({names, fields, empty}) {
+  const {filterHelperSource} = require('../filter-to-prisma');
   const id = idField(fields);
   const idName = id ? id.name : 'id';
   const idTs = id ? tsType(id) : 'string | number';
@@ -99,8 +100,13 @@ export class ${names.pascal}Repository {
     return (this.prisma.client as any).${delegate};
   }
 
-  findAll() {
-    return this.model.findMany();
+  /** LoopBack-style: GET /?filter={"where":{...},"order":["name ASC"],"limit":10} */
+  find(filter?: Record<string, unknown>) {
+    return this.model.findMany(toPrismaQuery(filter));
+  }
+
+  findAll(filter?: Record<string, unknown>) {
+    return this.find(filter);
   }
 
   findById(id: ${idTs}) {
@@ -119,6 +125,8 @@ export class ${names.pascal}Repository {
     return this.model.delete({where: {${idName}: id}});
   }
 }
+
+${filterHelperSource()}
 `;
 }
 
@@ -169,8 +177,10 @@ export class ${names.pascal}Controller {
   ) {}
 
   @get('/')
-  async find() {
-    return this.repository.findAll();
+  async find(
+    @param.query.object('filter') filter?: Record<string, unknown>,
+  ) {
+    return this.repository.find(filter);
   }
 
   @get('/{${idName}}')

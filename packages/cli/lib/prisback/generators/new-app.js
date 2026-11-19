@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs-extra');
-const {ask} = require('../prompts');
+const {ask, promptDatabaseProvider} = require('../prompts');
 const {projectRoot, writeFile} = require('../write');
 const {
   appNames,
@@ -74,6 +74,10 @@ async function promptNewApp(args, opts = {}) {
 async function generateNewApp(args = {}, opts = {}) {
   const cwd = opts.cwd || process.cwd();
   const {name, outDir} = await promptNewApp(args, opts);
+  const {provider} = await promptDatabaseProvider({
+    ...opts,
+    provider: opts.provider || args.provider,
+  });
   const names = appNames(name);
   const target = path.isAbsolute(outDir) ? outDir : path.join(cwd, outDir);
 
@@ -98,8 +102,8 @@ async function generateNewApp(args = {}, opts = {}) {
     JSON.stringify(packageJson(names, {workspace}), null, 2) + '\n',
   );
   write('tsconfig.json', JSON.stringify(tsconfigJson(), null, 2) + '\n');
-  write('prisma/schema.prisma', prismaSchema());
-  write('.env.example', envExample());
+  write('prisma/schema.prisma', prismaSchema(provider));
+  write('.env.example', envExample(provider));
   write('.gitignore', gitignore());
   write('README.md', appReadme(names));
   write('src/application.ts', applicationTs(names));
@@ -114,6 +118,7 @@ async function generateNewApp(args = {}, opts = {}) {
     className: names.className,
     outDir: target,
     workspace,
+    provider,
     files,
   };
 }
