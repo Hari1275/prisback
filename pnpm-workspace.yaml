@@ -11,3 +11,4 @@ allowBuilds:
   ejs: false
   tree-sitter-json: false
   tree-sitter: false
+  '@prisma/client': set this to true or false

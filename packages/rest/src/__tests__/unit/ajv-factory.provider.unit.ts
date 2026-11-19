@@ -239,6 +239,18 @@ describe('Ajv factory', () => {
     }
   });
 
+  it('accepts OpenAPI x-ts-type extension used by @requestBody DTOs', () => {
+    const ajvFactory = new AjvFactoryProvider().value();
+    class CreateUserDto {}
+    expect(() =>
+      ajvFactory().compile({
+        type: 'object',
+        properties: {name: {type: 'string'}},
+        'x-ts-type': CreateUserDto,
+      } as object),
+    ).to.not.throw();
+  });
+
   it('reports unknown format', async () => {
     const ajvFactory = await ctx.get(RestBindings.AJV_FACTORY);
     expect(() =>

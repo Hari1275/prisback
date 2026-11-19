@@ -5,6 +5,9 @@
 export interface PrismaClientLike {
   $connect(): Promise<void>;
   $disconnect(): Promise<void>;
+  /** Used by readiness probes when available. */
+  $queryRaw?: (query: TemplateStringsArray, ...values: unknown[]) => Promise<unknown>;
+  $runCommandRaw?: (command: object) => Promise<unknown>;
 }
 
 /**

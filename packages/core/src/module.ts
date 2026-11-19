@@ -21,9 +21,15 @@ export interface ModuleMetadata {
   controllers?: ControllerClass[];
 
   /**
-   * Providers / injectable services (bound via `app.service()`).
+   * Providers / injectable services (bound via `app.service()` → `services.*`).
    */
   providers?: ServiceOrProviderClass[];
+
+  /**
+   * Repository classes (bound as `repositories.ClassName` for
+   * `@inject('repositories.FooRepository')`).
+   */
+  repositories?: Constructor<object>[];
 }
 
 /**
@@ -41,7 +47,8 @@ export const MODULE_KEY = 'prisback:module';
  * @Module({
  *   imports: [PrismaModule],
  *   controllers: [UserController],
- *   providers: [UserRepository],
+ *   repositories: [UserRepository],
+ *   providers: [UserService],
  * })
  * export class UserModule {}
  *
@@ -77,6 +84,12 @@ export function Module(metadata: ModuleMetadata = {}): ClassDecorator {
       configurable: true,
       enumerable: true,
     });
+    Object.defineProperty(proto, 'repositories', {
+      value: metadata.repositories ?? [],
+      writable: true,
+      configurable: true,
+      enumerable: true,
+    });
   };
 }
 
@@ -101,5 +114,6 @@ export function moduleToComponent(
     controllers: metadata.controllers,
     components: metadata.imports,
     services: metadata.providers,
+    repositories: metadata.repositories,
   };
 }

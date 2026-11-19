@@ -85,10 +85,14 @@ async function runPrisbackCommand(opts, log = console.log) {
     log('Next:');
     log(`  cd ${pathBasename(result.outDir)}`);
     log('  cp .env.example .env   # set DATABASE_URL for your provider');
-    log('  npm install && npx prisma generate');
-    log('  npx prisma db push');
+    log('  npm install            # required before prisma (pins Prisma 6)');
+    log('  npm run prisma:generate');
+    log('  npm run prisma:migrate # SQL; or prisma:push for Mongo / prototypes');
     log('  npm run build && npm start');
-    log('  # OpenAPI: http://127.0.0.1:3000/openapi.json');
+    log('  # Health:   http://127.0.0.1:3000/health  /ready');
+    log('  # OpenAPI:  http://127.0.0.1:3000/openapi.json');
+    log('  # Explorer: http://127.0.0.1:3000/explorer/');
+    log('  # Do not run bare `npx prisma` without install — npm latest is Prisma 8.');
     return result;
   }
 
@@ -165,7 +169,9 @@ async function runPrisbackCommand(opts, log = console.log) {
   if (result.files) {
     for (const f of result.files) log(`  ${f.relative}`);
   }
-  if (result.moduleUpdated) log(`  updated module registration`);
+  if (result.moduleUpdated) {
+    log(`  registered ${result.model}Module in src/application.ts`);
+  }
   return result;
 }
 

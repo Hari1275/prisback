@@ -7,11 +7,20 @@ export interface AuthenticationMetadata {
 }
 
 /**
+ * Metadata stored by `@authorize()`.
+ */
+export interface AuthorizationMetadata {
+  roles: string[];
+}
+
+/**
  * JWT configuration.
  */
 export interface TokenServiceOptions {
   secret: string;
   expiresIn?: string | number;
+  /** Refresh token TTL (default 7d). */
+  refreshExpiresIn?: string | number;
   issuer?: string;
 }
 
@@ -21,12 +30,23 @@ export interface TokenServiceOptions {
 export interface UserProfile {
   id: string | number;
   email?: string;
+  roles?: string[];
   [key: string]: unknown;
+}
+
+export interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: 'Bearer';
+  expiresIn: string | number;
 }
 
 export interface TokenService {
   generateToken(user: UserProfile): Promise<string>;
+  generateRefreshToken(user: UserProfile): Promise<string>;
+  generateTokenPair(user: UserProfile): Promise<TokenPair>;
   verifyToken(token: string): Promise<UserProfile>;
+  verifyRefreshToken(token: string): Promise<UserProfile>;
 }
 
 export interface PasswordHasher {

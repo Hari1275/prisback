@@ -82,4 +82,24 @@ export class PrismaService implements LifeCycleObserver {
   async $disconnect(): Promise<void> {
     return this.stop();
   }
+
+  /**
+   * Readiness probe for load balancers (`GET /ready`).
+   * Prefer `$queryRaw` when present; otherwise treat a connected client as ready.
+   */
+  async isReady(): Promise<boolean> {
+    try {
+      if (typeof this.client.$queryRaw === 'function') {
+        await this.client.$queryRaw`SELECT 1`;
+        return true;
+      }
+      if (typeof this.client.$runCommandRaw === 'function') {
+        await this.client.$runCommandRaw({ping: 1});
+        return true;
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }

@@ -9,6 +9,7 @@ const {
 } = require('../prisma-schema');
 const {promptSelectModel, promptCrudMode} = require('../prompts');
 const {writeFile, projectRoot} = require('../write');
+const {registerModuleInApplication} = require('../register-module');
 const {
   generateDtoFile,
   generateRepositoryFile,
@@ -63,6 +64,12 @@ async function generateCrud(args = {}, opts = {}) {
     file: writeFile(root, f.relative, f.content, {force}),
   }));
 
+  const moduleUpdated = registerModuleInApplication(root, {
+    moduleClass: `${names.pascal}Module`,
+    importPath: `./modules/${names.kebab}/${names.kebab}.module`,
+    marker: `${names.pascal} CRUD module`,
+  });
+
   return {
     type: 'crud',
     model: names.pascal,
@@ -70,6 +77,7 @@ async function generateCrud(args = {}, opts = {}) {
     empty,
     moduleDir: names.moduleDir,
     files: written,
+    moduleUpdated,
   };
 }
 

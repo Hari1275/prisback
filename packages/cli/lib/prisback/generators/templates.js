@@ -100,7 +100,10 @@ export class ${names.pascal}Repository {
     return (this.prisma.client as any).${delegate};
   }
 
-  /** LoopBack-style: GET /?filter={"where":{...},"order":["name ASC"],"limit":10} */
+  /**
+   * LB4-familiar filter (documented subset). Unsupported ops → 400.
+   * Example: ?filter={"where":{"name":{"contains":"a"}},"fields":["id","name"],"include":"posts","order":["name ASC"],"limit":10}
+   */
   find(filter?: Record<string, unknown>) {
     return this.model.findMany(toPrismaQuery(filter));
   }
@@ -178,7 +181,11 @@ export class ${names.pascal}Controller {
 
   @get('/')
   async find(
-    @param.query.object('filter') filter?: Record<string, unknown>,
+    @param.query.object('filter', {
+      additionalProperties: true,
+      example: {where: {id: {neq: null}}, order: ['id ASC'], limit: 10},
+    })
+    filter?: Record<string, unknown>,
   ) {
     return this.repository.find(filter);
   }
@@ -218,7 +225,7 @@ import {${names.pascal}Repository} from './${names.kebab}.repository';
 
 @Module({
   controllers: [${names.pascal}Controller],
-  providers: [${names.pascal}Repository],
+  repositories: [${names.pascal}Repository],
 })
 export class ${names.pascal}Module {}
 `;

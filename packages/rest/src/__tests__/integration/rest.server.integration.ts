@@ -629,7 +629,7 @@ paths:
     await server.get(RestBindings.PORT);
     const expectedUrl = new RegExp(
       [
-        'http://explorer\\.loopback\\.io',
+        'http://petstore\\.swagger\\.io',
         '\\?url=http://\\d+.\\d+.\\d+.\\d+:\\d+/openapi.json',
       ].join(''),
     );
@@ -664,7 +664,7 @@ paths:
     await server.get(RestBindings.PORT);
     const expectedUrl = new RegExp(
       [
-        'https://explorer\\.loopback\\.io',
+        'https://petstore\\.swagger\\.io',
         '\\?url=https://example\\.com:8080/openapi\\.json',
       ].join(''),
     );
@@ -683,7 +683,7 @@ paths:
     await server.get(RestBindings.PORT);
     const expectedUrl = new RegExp(
       [
-        'http://explorer.loopback.io',
+        'http://petstore.swagger.io',
         '\\?url=http://example.com:8080/openapi.json',
       ].join(''),
     );
@@ -703,7 +703,7 @@ paths:
     await server.get(RestBindings.PORT);
     const expectedUrl = new RegExp(
       [
-        'https://explorer\\.loopback\\.io',
+        'https://petstore\\.swagger\\.io',
         '\\?url=https://example\\.com/openapi\\.json',
       ].join(''),
     );
@@ -849,12 +849,12 @@ paths:
     const serverUrl = server.getSync(RestBindings.URL);
 
     // The `Location` header should be something like
-    // https://explorer.loopback.io?url=https://[::1]:58470/openapi.json
+    // https://petstore.swagger.io?url=https://[::1]:58470/openapi.json
     const res = await httpsGetAsync(serverUrl + '/explorer');
     const location = res.headers['location'];
     expect(location).to.match(/\[\:\:1\]\:\d+\/openapi.json/);
     expect(location).to.equal(
-      `https://explorer.loopback.io?url=${serverUrl}/openapi.json`,
+      `https://petstore.swagger.io?url=${serverUrl}/openapi.json`,
     );
     await server.stop();
   });

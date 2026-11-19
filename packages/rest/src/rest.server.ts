@@ -1147,8 +1147,9 @@ export interface OpenApiSpecOptions {
 
 export interface ApiExplorerOptions {
   /**
-   * URL for the hosted API explorer UI
-   * default to https://loopback.io/api-explorer
+   * URL for the hosted API explorer UI.
+   * Default: https://petstore.swagger.io (neutral Swagger UI).
+   * Prefer a same-origin explorer for local `http://` apps (mixed content).
    */
   url?: string;
 
@@ -1156,7 +1157,6 @@ export interface ApiExplorerOptions {
    * URL for the API explorer served over `http` protocol to deal with mixed
    * content security imposed by browsers as the spec is exposed over `http` by
    * default.
-   * See https://github.com/loopbackio/loopback-next/issues/1603
    */
   httpUrl?: string;
 
@@ -1251,14 +1251,18 @@ function resolveRestServerConfig(
   return result;
 }
 
+/** Neutral Swagger UI host — do not use LoopBack-branded explorer URLs. */
+const DEFAULT_API_EXPLORER_URL = 'https://petstore.swagger.io';
+const DEFAULT_API_EXPLORER_HTTP_URL = 'http://petstore.swagger.io';
+
 function normalizeApiExplorerConfig(
   input: ApiExplorerOptions | undefined,
 ): ApiExplorerOptions {
   const config = input ?? {};
-  const url = config.url ?? 'https://explorer.loopback.io';
+  const url = config.url ?? DEFAULT_API_EXPLORER_URL;
 
   config.httpUrl =
-    config.httpUrl ?? config.url ?? 'http://explorer.loopback.io';
+    config.httpUrl ?? config.url ?? DEFAULT_API_EXPLORER_HTTP_URL;
 
   config.url = url;
 

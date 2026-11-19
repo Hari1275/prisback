@@ -1,7 +1,7 @@
 {
   "name": "@prisback/cli",
   "description": "PrisBack CLI — Prisma-first generators with PrisBack-style interactive prompts",
-  "version": "8.0.7",
+  "version": "1.0.0",
   "keywords": [
     "PrisBack",
     "Prisma",

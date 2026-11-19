@@ -5,6 +5,10 @@ import {
   authenticate,
   getAuthenticateMetadata,
 } from '../../decorators/authenticate.decorator';
+import {
+  authorize,
+  getAuthorizeMetadata,
+} from '../../decorators/authorize.decorator';
 
 describe('JWTService', () => {
   const service = new JWTService({
@@ -31,6 +35,40 @@ describe('JWTService', () => {
       threw = true;
     }
     expect(threw).to.eql(true);
+  });
+
+  it('issues and rotates refresh tokens', async () => {
+    const pair = await service.generateTokenPair({
+      id: 'u1',
+      email: 'ada@example.com',
+      roles: ['admin'],
+    });
+    expect(pair.accessToken).to.be.a.String();
+    expect(pair.refreshToken).to.be.a.String();
+    const refreshed = await service.verifyRefreshToken(pair.refreshToken);
+    expect(refreshed.id).to.eql('u1');
+    expect(refreshed.roles).to.eql(['admin']);
+    let threw = false;
+    try {
+      await service.verifyToken(pair.refreshToken);
+    } catch {
+      threw = true;
+    }
+    expect(threw).to.eql(true);
+  });
+});
+
+describe('@authorize()', () => {
+  class DemoController {
+    @authorize('admin')
+    adminOnly() {
+      return 'ok';
+    }
+  }
+
+  it('stores role metadata', () => {
+    const meta = getAuthorizeMetadata(DemoController, 'adminOnly');
+    expect(meta).to.eql({roles: ['admin']});
   });
 });
 

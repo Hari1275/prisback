@@ -1,6 +1,6 @@
 {
   "name": "prisback",
-  "version": "0.1.6",
+  "version": "1.0.0",
   "description": "PrisBack CLI — Prisma-first backend scaffolding (npx prisback)",
   "license": "MIT",
   "bin": {

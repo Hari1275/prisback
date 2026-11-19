@@ -51,8 +51,11 @@ export class AjvFactoryProvider implements Provider<AjvFactory> {
         ...options,
       };
       // See https://github.com/epoberezkin/ajv#options
+      // AJV v8 defaults `strict: true`, which rejects OpenAPI/TS extensions
+      // like `x-ts-type` used by @requestBody() DTO metadata.
       validationOptions = {
         allErrors: true,
+        strict: false,
         strictTypes: false,
         ...validationOptions,
       };
@@ -63,6 +66,7 @@ export class AjvFactoryProvider implements Provider<AjvFactory> {
       const ajvInst = new AjvCtor(ajvOptions);
       ajvInst.addKeyword('components');
       ajvInst.addKeyword('x-typescript-type');
+      ajvInst.addKeyword('x-ts-type');
       ajvInst.addKeyword('x-index-info');
 
       ajvKeywords(ajvInst, validationOptions.ajvKeywords);

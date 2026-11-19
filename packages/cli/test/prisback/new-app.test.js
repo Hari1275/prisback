@@ -36,8 +36,20 @@ describe('prisback new', function () {
     expect(
       await fs.pathExists(path.join(root, 'src/controllers/ping.controller.ts')),
     ).to.be.true();
+    expect(
+      await fs.pathExists(path.join(root, 'src/controllers/health.controller.ts')),
+    ).to.be.true();
+    expect(
+      await fs.pathExists(path.join(root, 'src/config/security.ts')),
+    ).to.be.true();
     expect(await fs.pathExists(path.join(root, 'prisma/schema.prisma'))).to.be.true();
     expect(await fs.pathExists(path.join(root, 'public/index.html'))).to.be.true();
+    expect(
+      await fs.pathExists(path.join(root, 'public/explorer/index.html')),
+    ).to.be.true();
+    const indexTs = await fs.readFile(path.join(root, 'src/index.ts'), 'utf8');
+    expect(indexTs).to.match(/apiExplorer:\s*\{\s*disabled:\s*true/);
+    expect(indexTs).to.match(/trustProxy/);
 
     const schema = await fs.readFile(path.join(root, 'prisma/schema.prisma'), 'utf8');
     expect(schema).to.match(/provider\s*=\s*"sqlite"/);
@@ -45,12 +57,14 @@ describe('prisback new', function () {
 
     const indexSrc = await fs.readFile(path.join(root, 'src/index.ts'), 'utf8');
     expect(indexSrc).to.match(/openapi\.json/);
-    expect(indexSrc).to.match(/\/ping/);
+    expect(indexSrc).to.match(/\/health/);
 
     const appSrc = await fs.readFile(path.join(root, 'src/application.ts'), 'utf8');
     expect(appSrc).to.match(/PrismaComponent/);
     expect(appSrc).to.match(/AuthenticationComponent/);
     expect(appSrc).to.match(/BootMixin/);
+    expect(appSrc).to.match(/helmet/);
+    expect(appSrc).to.match(/rateLimit/);
   });
 
   it('scaffolds mongodb datasource when provider is mongodb', async () => {

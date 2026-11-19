@@ -12,9 +12,12 @@ const {
   envExample,
   gitignore,
   applicationTs,
+  securityTs,
   indexTs,
   pingControllerTs,
+  healthControllerTs,
   publicIndexHtml,
+  publicExplorerHtml,
   appReadme,
 } = require('./new-app-templates');
 
@@ -107,9 +110,12 @@ async function generateNewApp(args = {}, opts = {}) {
   write('.gitignore', gitignore());
   write('README.md', appReadme(names));
   write('src/application.ts', applicationTs(names));
+  write('src/config/security.ts', securityTs());
   write('src/index.ts', indexTs(names));
   write('src/controllers/ping.controller.ts', pingControllerTs());
+  write('src/controllers/health.controller.ts', healthControllerTs());
   write('public/index.html', publicIndexHtml(names));
+  write('public/explorer/index.html', publicExplorerHtml(names));
 
   return {
     type: 'new',

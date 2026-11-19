@@ -81,6 +81,11 @@ export interface Component {
   services?: ServiceOrProviderClass[];
 
   /**
+   * An array of repository classes bound as `repositories.ClassName`.
+   */
+  repositories?: Constructor<object>[];
+
+  /**
    * An array of bindings to be aded to the application context.
    *
    * @example
@@ -155,6 +160,27 @@ export function mountComponent(app: Application, component: Component) {
   if (component.services) {
     for (const service of component.services) {
       app.service(service);
+      // Compat: Nest-style modules often list *Repository under providers.
+      // Controllers inject `repositories.FooRepository` — mirror the binding.
+      if (
+        typeof service === 'function' &&
+        /Repository$/.test((service as Constructor<object>).name)
+      ) {
+        const ctor = service as Constructor<object>;
+        const key = `repositories.${ctor.name}`;
+        if (!app.isBound(key)) {
+          app.add(createBindingFromClass(ctor, {key}));
+        }
+      }
+    }
+  }
+
+  if (component.repositories) {
+    for (const repo of component.repositories) {
+      const key = `repositories.${repo.name}`;
+      if (!app.isBound(key)) {
+        app.add(createBindingFromClass(repo, {key}));
+      }
     }
   }
 

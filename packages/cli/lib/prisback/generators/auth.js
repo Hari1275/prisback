@@ -98,8 +98,10 @@ function ensureUserModel(schemaPath, userModel) {
     // Patch missing fields
     let next = content;
     const insert = [];
+    const hasRoles = existing.fields.some(f => f.name === 'roles');
     if (!hasEmail) insert.push('  email String @unique');
     if (!hasPassword) insert.push('  password String');
+    if (!hasRoles) insert.push('  roles Json?');
     if (insert.length) {
       const re = new RegExp(`(model\\s+${userModel}\\s*\\{)([\\s\\S]*?)(\\n\\})`);
       next = next.replace(re, (full, start, body, end) => {
@@ -122,6 +124,7 @@ function ensureUserModel(schemaPath, userModel) {
       {name: 'email', type: 'String', isOptional: false, isUnique: true},
       {name: 'password', type: 'String', isOptional: false},
       {name: 'name', type: 'String', isOptional: true},
+      {name: 'roles', type: 'Json', isOptional: true},
     ],
     {provider},
   );

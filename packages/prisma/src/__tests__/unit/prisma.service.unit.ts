@@ -34,6 +34,28 @@ describe('PrismaService', () => {
     const service = new PrismaService(client);
     expect(service.client).to.equal(client);
   });
+
+  it('reports readiness via $queryRaw when available', async () => {
+    const queryRaw = sinon.stub().resolves([{ok: 1}]);
+    const readyClient: PrismaClientLike = {
+      $connect: connect,
+      $disconnect: disconnect,
+      $queryRaw: queryRaw,
+    };
+    const service = new PrismaService(readyClient);
+    expect(await service.isReady()).to.eql(true);
+    sinon.assert.calledOnce(queryRaw);
+  });
+
+  it('returns false when readiness probe fails', async () => {
+    const readyClient: PrismaClientLike = {
+      $connect: connect,
+      $disconnect: disconnect,
+      $queryRaw: sinon.stub().rejects(new Error('down')),
+    };
+    const service = new PrismaService(readyClient);
+    expect(await service.isReady()).to.eql(false);
+  });
 });
 
 describe('PrismaComponent', () => {

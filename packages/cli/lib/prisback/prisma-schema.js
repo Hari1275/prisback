@@ -97,11 +97,23 @@ function envExampleForProvider(provider = 'sqlite') {
       'mongodb+srv://USER:PASSWORD@cluster.example.mongodb.net/mydb?retryWrites=true&w=majority',
   };
   const databaseUrl = urls[p] || urls.sqlite;
-  return `PORT=3000
+  const poolHint =
+    p === 'postgresql'
+      ? '\n# Optional pool (high traffic): append ?connection_limit=10&pool_timeout=20'
+      : p === 'mysql'
+        ? '\n# Optional pool: append ?connection_limit=10'
+        : '';
+  return `NODE_ENV=development
+PORT=3000
 HOST=127.0.0.1
-DATABASE_URL="${databaseUrl}"
+DATABASE_URL="${databaseUrl}"${poolHint}
 JWT_SECRET=change-me-in-production
 JWT_EXPIRES_IN=1h
+JWT_REFRESH_EXPIRES_IN=7d
+CORS_ORIGIN=http://127.0.0.1:3000
+BODY_LIMIT=1mb
+RATE_LIMIT_WINDOW_MS=60000
+RATE_LIMIT_MAX=120
 `;
 }
 

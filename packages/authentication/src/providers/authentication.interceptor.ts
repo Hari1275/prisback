@@ -14,6 +14,7 @@ import {
   TokenServiceBindings,
 } from '../keys';
 import {getAuthenticateMetadata} from '../decorators/authenticate.decorator';
+import {getAuthorizeMetadata} from '../decorators/authorize.decorator';
 import {TokenService, TokenServiceOptions, UserProfile} from '../types';
 
 function unauthorized(message = 'Authorization required'): Error {
@@ -21,6 +22,14 @@ function unauthorized(message = 'Authorization required'): Error {
     statusCode: 401,
     status: 401,
     code: 'AUTHENTICATION_REQUIRED',
+  });
+}
+
+function forbidden(message = 'Forbidden'): Error {
+  return Object.assign(new Error(message), {
+    statusCode: 403,
+    status: 403,
+    code: 'AUTHORIZATION_FAILED',
   });
 }
 
@@ -85,6 +94,16 @@ export class AuthenticationInterceptorProvider implements Provider<Interceptor> 
     invocationCtx
       .bind(AuthenticationBindings.CURRENT_USER)
       .to(profile);
+
+    const authz = getAuthorizeMetadata(targetCtor, methodName);
+    if (authz?.roles?.length) {
+      const userRoles = Array.isArray(profile.roles) ? profile.roles : [];
+      const ok = authz.roles.some(role => userRoles.includes(role));
+      if (!ok) {
+        throw forbidden(`Requires one of roles: ${authz.roles.join(', ')}`);
+      }
+    }
+
     return next();
   }
 
